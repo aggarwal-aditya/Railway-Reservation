@@ -4,6 +4,18 @@ create table coach(coach_type char(2), berth_num integer, berth_type char(2), pr
 
 
 
+--Release Train
+CREATE OR REPLACE FUNCTION releaseTrain(trainID integer,day date,count_AC integer,count_SL integer)
+RETURNS NULL
+AS
+$$
+BEGIN
+	INSERT INTO available_trains VALUES(trainID,day,integer,integer);
+END;
+$$
+language plpgsql;
+
+
 -- Get Train Composition
 CREATE OR REPLACE FUNCTION getSeatMatrix(trainID integer, day date, coachType char(2))
 RETURNS table(coach_num integer, berth integer)
