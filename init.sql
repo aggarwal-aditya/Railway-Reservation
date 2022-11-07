@@ -100,7 +100,7 @@ BEGIN
 	if count_empty < num_seats then
 	raise exception '% seats not available', num_seats;
 	else
-	for empty_seats in EXECUTE FORMAT('select * from %I','empty_'||lower(ct)||'_seats_'||trainID::text||'_'||to_char(day,'yyyy_mm_dd'))
+	for empty_seats in EXECUTE FORMAT('select * from %I LIMIT %L','empty_'||lower(ct)||'_seats_'||trainID::text||'_'||to_char(day,'yyyy_mm_dd'),num_seats)
 	loop
 		EXECUTE FORMAT ('DELETE FROM %I c where c.coach_num=%L AND c.berth=%L','empty_'||lower(ct)||'_seats_'||trainID::text||'_'||to_char(day,'yyyy_mm_dd'),empty_seats.coach_num, empty_seats.berth);
 	end loop;
@@ -114,6 +114,40 @@ END;
 $$
 language plpgsql;
 
+
+
+CREATE OR REPLACE FUNCTION generateUniquePNR(trainID integer, day date, coach_type char(2), coach integer, berth integer)
+RETURNS bigint
+AS 
+$$
+DECLARE 
+hashed_value text;
+arr char(1)[32];
+concated_string text;
+mod bigint := 1000000007;
+pnr bigint;
+f char(1);
+ascii_value bigint;
+pow bigint;
+BEGIN
+	concated_string=trainID::text||to_char(day,'yyyy_mm_dd')||coach_type||coach::text||berth::text;
+	select MD5 (concated_string) into hashed_value;
+	SELECT string_to_array(hashed_value::text, NULL) into arr;
+	pow=1;
+	pnr=0;
+	foreach f in ARRAY arr
+	loop
+	select * from ascii(f) into ascii_value;
+	ascii_value=ascii_value*pow;
+	pnr=pnr+ascii_value;
+	pnr=pnr%mod;
+	pow=pow*16;
+	pow=pow%mod;
+	end loop;
+	return pnr;
+END;
+$$
+language plpgsql;
 
 
 
