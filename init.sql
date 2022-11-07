@@ -76,26 +76,62 @@ ON available_trains
 FOR EACH ROW
 EXECUTE PROCEDURE _on_train_release();
 
-
+-- CREATE OR REPLACE FUNCTION lock_free_seats (
+-- 	ct char(2),
+-- 	num_seats integer,
+-- 	trainID integer,
+-- 	date date
+-- )
+-- returns table (
+-- 	coach_num integer,
+-- 	berth integer
+-- )
+-- AS
+-- $$
+-- declare
+-- count_empty integer;
+-- begin
+-- 	-- EXECUTE format('select count(*) from %I where coach like %L', 'empty_seats_'||train_id||to_char(date,'_yyyy_mm_dd'), coach_type ||'%') into available;
+-- 	EXECUTE FORMAT('select count(*) from %I','empty_'|ct|'seats_'|trainID::text||to_char(date,'yyyy_mm_dd')) into count_empty;
+-- 	if count_empty < num_seats then
+-- 	raise '% seats not available', num_seats;
+-- 	else
+-- 	-- return query EXECUTE format('select * from %I where coach like %L limit %L', 'empty_seats_'||train_id||to_char(date,'_yyyy_mm_dd'), coach_type ||'%', num_seats);
+-- 	RETURN QUERY EXECUTE FORMAT('select * from %I LIMIT %L','empty_'|ct|'seats_'|trainID::text||to_char(date,'yyyy_mm_dd'),num_seats);
+-- end if;
+-- end; 
+-- $$
+-- language plpgsql;
 
 CREATE OR REPLACE FUNCTION bookTicket(
 	trainID integer,
 	day date,
-	num_Tickets integer,
+	num_seats integer,
 	ct char(2),
 	passenger_name varchar(256)[],
 	passenger_age integer[],
 	passenger_gender char(1)[]
-
+	
 )
 RETURNS text
 AS 
 $$
-SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+declare 
+count_empty integer;
+empty_seats record;
+pnr bigint;
 BEGIN 
-	BEGIN TRANSACTION myTran;
-	RETURN (SELECT current_setting('transaction_isolation'));
-	COMMIT TRANSACTION myTran ;
+	-- check bookings_train_no_date(yyyy_mm_dd)
+	EXECUTE FORMAT('select count(*) from %I','empty_'|ct|'seats_'|trainID::text||to_char(date,'yyyy_mm_dd')) into count_empty;
+	if count_empty < num_seats then
+	raise notice '% seats not available', num_seats;
+	else
+	EXECUTE FORMAT('select * from %I','empty_'|ct|'seats_'|trainID::text||to_char(date,'yyyy_mm_dd')) into empty_seats;
+	pnr=generateUniquePNR(trainID,date,);
+	EXECUTE FORMAT ('INSERT INTO %I VALUES(%L)',  'bookings_' || trainID::text || '_' || to_char(day, 'yyyy_mm_dd'), pnr);
+	EXECUTE FORMAT ('DELETE FROM %I c where c.coach_num=empty_seats.coach_num AND ','empty_'|ct|'seats_'|trainID::text||to_char(date,'yyyy_mm_dd'))
+	end if;
+
 END;
 $$
 language plpgsql;
