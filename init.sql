@@ -1,7 +1,7 @@
 create table trains( train_id integer primary key, name varchar(256) not null);
 create table available_trains(train_id integer, date date, num_AC integer not null, num_SL integer not null, primary key(train_id, date), foreign key(train_id) references trains(train_id));
 create table coach(coach_type char(2), berth_num integer, berth_type char(2), primary key(coach_type, berth_num));
-
+-- Probably check for hash collisions (Maybe)
 
 
 --Release Train
@@ -10,7 +10,7 @@ RETURNS NULL
 AS
 $$
 BEGIN
-	INSERT INTO available_trains VALUES(trainID,day,integer,integer);
+	INSERT INTO available_trains VALUES(trainID,day,count_AC,count_SL);
 END;
 $$
 language plpgsql;
@@ -128,7 +128,7 @@ DECLARE
 hashed_value text;
 arr char(1)[32];
 concated_string text;
-mod bigint := 1000000007;
+mod bigint := 1610612741;
 pnr bigint;
 f char(1);
 ascii_value bigint;
