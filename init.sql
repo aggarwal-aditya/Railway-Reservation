@@ -77,6 +77,7 @@ FOR EACH ROW
 EXECUTE PROCEDURE _on_train_release();
 
 
+
 CREATE OR REPLACE FUNCTION bookTicket(
 	trainID integer,
 	day date,
@@ -94,6 +95,7 @@ declare
 count_empty integer;
 empty_seats record;
 pnr bigint;
+i integer=1;
 BEGIN 
 	-- check bookings_train_no_date(yyyy_mm_dd)
 	EXECUTE FORMAT('select count(*) from %I','empty_'||lower(ct)||'_seats_'||trainID::text||'_'||to_char(day,'yyyy_mm_dd')) into count_empty;
@@ -102,12 +104,14 @@ BEGIN
 	else
 	for empty_seats in EXECUTE FORMAT('select * from %I LIMIT %L','empty_'||lower(ct)||'_seats_'||trainID::text||'_'||to_char(day,'yyyy_mm_dd'),num_seats)
 	loop
+	if pnr IS NULL then
+		pnr=generateUniquePNR(trainID,day,ct,empty_seats.coach_num,empty_seats.berth);
+		EXECUTE FORMAT('CREATE TABLE %I (name varchar(256), age integer, gender char(1), trainID integer, coach char(5), berth integer);', 'ticket_' || pnr::text);
+	END IF;
+		EXECUTE FORMAT('INSERT INTO %I VALUES(%L, %L, %L, %L, %L, %L);', 'ticket_' || pnr::text, passenger_name[i], passenger_age[i], passenger_gender[i], trainID,ct||empty_seats.coach_num::text, empty_seats.berth);
 		EXECUTE FORMAT ('DELETE FROM %I c where c.coach_num=%L AND c.berth=%L','empty_'||lower(ct)||'_seats_'||trainID::text||'_'||to_char(day,'yyyy_mm_dd'),empty_seats.coach_num, empty_seats.berth);
+		i=i+1;
 	end loop;
-	-- EXECUTE FORMAT('select * from %I','empty_'|ct|'seats_'|trainID::text||to_char(date,'yyyy_mm_dd')) into empty_seats;
-	-- pnr=generateUniquePNR(trainID,date,);
-	-- EXECUTE FORMAT ('INSERT INTO %I VALUES(%L)',  'bookings_' || trainID::text || '_' || to_char(day, 'yyyy_mm_dd'), pnr);
-	-- EXECUTE FORMAT ('DELETE FROM %I c where c.coach_num=empty_seats.coach_num AND ','empty_'|ct|'seats_'|trainID::text||to_char(date,'yyyy_mm_dd'));
 	end if;
 	RETURN PNR;
 END;
