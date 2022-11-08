@@ -1,15 +1,50 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.StringTokenizer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
+
+class JDBCPostgreSQLConnection {
+    private final String url = "jdbc:postgresql://localhost:5432/railwaydb";
+    private final String user = "postgres";
+    private final String password = "admin";
+
+    /**
+     * Connect to the PostgreSQL database
+     *
+     * @return a Connection object
+     */
+    public Connection connect() {
+        Connection conn = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+        }
+        catch(ClassNotFoundException ex) {
+            System.out.println("Error: unable to load driver class!");
+            System.exit(1);
+        }
+        try {
+            conn = DriverManager.getConnection(url, user, password);
+
+            if (conn != null) {
+                System.out.println("Connected to the PostgreSQL server successfully.");
+            } else {
+                System.out.println("Failed to make connection!");
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return conn;
+    }
+}
 
 class QueryRunner implements Runnable
 {
@@ -73,6 +108,8 @@ class QueryRunner implements Runnable
                 //     e.printStackTrace();
                 // }
 
+
+
                 responseQuery = "******* Dummy result ******";
 
                 //----------------------------------------------------------------
@@ -101,6 +138,8 @@ public class ServiceModule
     //------------ Main----------------------
     public static void main(String[] args) throws IOException
     {
+
+
         // Creating a thread pool
         ExecutorService executorService = Executors.newFixedThreadPool(numServerCores);
 
@@ -111,6 +150,18 @@ public class ServiceModule
         // Always-ON server
         while(true)
         {
+            JDBCPostgreSQLConnection app = new JDBCPostgreSQLConnection();
+            try {
+                Connection conn = app.connect();
+//                System.out.println("Transaction Isolation Level: " + conn.getTransactionIsolation());
+                conn.setAutoCommit(false);
+                conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+                // Get the transaction isolation again
+//                System.out.println("Transaction Isolation Level: "+ conn.getTransactionIsolation());
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
             System.out.println("Listening port : " + serverPort
                     + "\nWaiting for clients...");
             socketConnection = serverSocket.accept();   // Accept a connection from a client
