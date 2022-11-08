@@ -6,11 +6,12 @@ create table coach(coach_type char(2), berth_num integer, berth_type char(2), pr
 
 --Release Train
 CREATE OR REPLACE FUNCTION releaseTrain(trainID integer,day date,count_AC integer,count_SL integer)
-RETURNS NULL
+RETURNS integer
 AS
 $$
 BEGIN
 	INSERT INTO available_trains VALUES(trainID,day,count_AC,count_SL);
+	return 1;
 END;
 $$
 language plpgsql;
@@ -106,7 +107,7 @@ BEGIN
 	loop
 	if pnr IS NULL then
 		pnr=generateUniquePNR(trainID,day,ct,empty_seats.coach_num,empty_seats.berth);
-		EXECUTE FORMAT('CREATE TABLE %I (name varchar(256), age integer, gender char(1), trainID integer, coach char(5), berth integer);', 'ticket_' || pnr::text);
+		EXECUTE FORMAT('CREATE TABLE %I (name varchar(256), age integer, gender char(1), trainID integer, coach char(8), berth integer);', 'ticket_' || pnr::text);
 	END IF;
 		EXECUTE FORMAT('INSERT INTO %I VALUES(%L, %L, %L, %L, %L, %L);', 'ticket_' || pnr::text, passenger_name[i], passenger_age[i], passenger_gender[i], trainID,ct||empty_seats.coach_num::text, empty_seats.berth);
 		EXECUTE FORMAT ('DELETE FROM %I c where c.coach_num=%L AND c.berth=%L','empty_'||lower(ct)||'_seats_'||trainID::text||'_'||to_char(day,'yyyy_mm_dd'),empty_seats.coach_num, empty_seats.berth);
@@ -124,7 +125,7 @@ CREATE OR REPLACE FUNCTION generateUniquePNR(trainID integer, day date, coach_ty
 RETURNS bigint
 AS 
 $$
-DECLARE 
+DECLARE 	
 hashed_value text;
 arr char(1)[32];
 concated_string text;
