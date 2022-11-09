@@ -1,4 +1,4 @@
-org.postgresql.jdbc.PgResultSet@18415fb8
+org.postgresql.jdbc.PgResultSet@4bdad28
 ******* Dummy result ******
-org.postgresql.jdbc.PgResultSet@57a15f2b
+org.postgresql.jdbc.PgResultSet@72cef837
 ******* Dummy result ******
