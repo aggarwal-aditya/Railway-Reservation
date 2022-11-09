@@ -1,5 +1,10 @@
+org.postgresql.jdbc.PgResultSet@523e386c
 ******* Dummy result ******
+org.postgresql.jdbc.PgResultSet@6a14ad55
 ******* Dummy result ******
+org.postgresql.jdbc.PgResultSet@12686410
 ******* Dummy result ******
+org.postgresql.jdbc.PgResultSet@73e5deb8
 ******* Dummy result ******
+org.postgresql.jdbc.PgResultSet@503b65f0
 ******* Dummy result ******

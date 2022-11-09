@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -58,6 +59,20 @@ class QueryRunner implements Runnable
 
     public void run()
     {
+        JDBCPostgreSQLConnection app = new JDBCPostgreSQLConnection();
+        Connection conn=null;
+        try {
+            conn= app.connect();
+//                System.out.println("Transaction Isolation Level: " + conn.getTransactionIsolation());
+            conn.setAutoCommit(false);
+            conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+            // Get the transaction isolation again
+//                System.out.println("Transaction Isolation Level: "+ conn.getTransactionIsolation());
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         try
         {
             //  Reading data from client
@@ -77,8 +92,8 @@ class QueryRunner implements Runnable
             {
                 // Read client query
                 clientCommand = bufferedInput.readLine();
-                // System.out.println("Recieved data <" + clientCommand + "> from client : "
-                //                     + socketConnection.getRemoteSocketAddress().toString());
+//                 System.out.println("Received data <" + clientCommand + "> from client : "
+//                                     + socketConnection.getRemoteSocketAddress().toString());
 
                 //  Tokenize here
                 StringTokenizer tokenizer = new StringTokenizer(clientCommand);
@@ -86,9 +101,9 @@ class QueryRunner implements Runnable
 
                 if(queryInput.equals("Finish"))
                 {
-                    String returnMsg = "Connection Terminated - client : "
-                            + socketConnection.getRemoteSocketAddress().toString();
-                    System.out.println(returnMsg);
+//                    String returnMsg = "Connection Terminated - client : "
+//                            + socketConnection.getRemoteSocketAddress().toString();
+//                    System.out.println(returnMsg);
                     inputStream.close();
                     bufferedInput.close();
                     outputStream.close();
@@ -97,23 +112,26 @@ class QueryRunner implements Runnable
                     socketConnection.close();
                     return;
                 }
+                try {
+                    Statement st = conn.createStatement();
+                    ResultSet rs;
+                    CallableStatement bookTicket = conn.prepareCall("{? = call bookTicket(?,?,?,?,?,?,?) }");
+                    bookTicket.registerOutParameter(1,Types.BIGINT);
+                    rs = st.executeQuery("SELECT * FROM trains");
+                    while (rs.next()) {
+                        System.out.print("Column 1 returned\n");
+                        printWriter.println(rs);
+                    }
+                    rs.close();
+                    st.close();
+                    responseQuery = "******* Dummy result ******";
+                }
+                catch (SQLException e) {
+                    System.out.print(e.getMessage());
+                }
 
-                //-------------- your DB code goes here----------------------------
-                // try
-                // {
-                //    // Thread.sleep(6000);
-                // }
-                // catch (InterruptedException e)
-                // {
-                //     e.printStackTrace();
-                // }
-
-
-
-                responseQuery = "******* Dummy result ******";
 
                 //----------------------------------------------------------------
-
                 //  Sending data back to the client
                 printWriter.println(responseQuery);
                 // System.out.println("\nSent results to client - "
@@ -125,11 +143,12 @@ class QueryRunner implements Runnable
         {
             return;
         }
+
     }
 }
 
 /**
- * Main Class to controll the program flow
+ * Main Class to control the program flow
  */
 public class ServiceModule
 {
@@ -148,20 +167,7 @@ public class ServiceModule
         Socket socketConnection = null;
 
         // Always-ON server
-        while(true)
-        {
-            JDBCPostgreSQLConnection app = new JDBCPostgreSQLConnection();
-            try {
-                Connection conn = app.connect();
-//                System.out.println("Transaction Isolation Level: " + conn.getTransactionIsolation());
-                conn.setAutoCommit(false);
-                conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-                // Get the transaction isolation again
-//                System.out.println("Transaction Isolation Level: "+ conn.getTransactionIsolation());
-            }
-            catch (SQLException e) {
-                e.printStackTrace();
-            }
+        while(true){
             System.out.println("Listening port : " + serverPort
                     + "\nWaiting for clients...");
             socketConnection = serverSocket.accept();   // Accept a connection from a client
@@ -175,4 +181,3 @@ public class ServiceModule
         }
     }
 }
-

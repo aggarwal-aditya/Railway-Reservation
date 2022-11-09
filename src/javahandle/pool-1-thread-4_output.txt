@@ -1,2 +1,4 @@
+org.postgresql.jdbc.PgResultSet@18415fb8
 ******* Dummy result ******
+org.postgresql.jdbc.PgResultSet@57a15f2b
 ******* Dummy result ******
