@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.*;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -75,39 +76,33 @@ class QueryRunner implements Runnable {
             BufferedWriter bufferedOutput = new BufferedWriter(outputStream);
             PrintWriter printWriter = new PrintWriter(bufferedOutput, true);
 
-            String clientCommand=bufferedInput.readLine();
+            String clientCommand = bufferedInput.readLine();
             String responseQuery = "";
             String queryInput = "";
             while (!clientCommand.equals("#")) {
-//                System.out.println("Received data <" + clientCommand + "> from client : "
-//                        + socketConnection.getRemoteSocketAddress().toString());
-
-//                StringTokenizer tokenizer = new StringTokenizer(clientCommand);
-//                queryInput = tokenizer.nextToken();
                 String[] tokens = clientCommand.split(" ");
                 int numberofTickets = 0;
                 String[] passengerName = null;
-                String coachType="";
-                String date="";
-                int trainID= 0;
+                String coachType = "";
+                String date = "";
+                int trainID = 0;
                 try {
                     numberofTickets = Integer.parseInt(tokens[0]);
                     passengerName = new String[numberofTickets];
-                    coachType=tokens[tokens.length-1];
-                    date=tokens[tokens.length-2];
-                    trainID= Integer.parseInt(tokens[tokens.length-3]);
-                    tokens[tokens.length-4]+=',';
-                    int p_count=0;
-                    String p_name="";
-                    for(int i=1;i<tokens.length-3;i++){
-                        if(tokens[i].charAt(tokens[i].length()-1)==','){
-                            p_name+=tokens[i].substring(0,tokens[i].length()-1);
-                            passengerName[p_count]=p_name;
-                            p_name="";
+                    coachType = tokens[tokens.length - 1];
+                    date = tokens[tokens.length - 2];
+                    trainID = Integer.parseInt(tokens[tokens.length - 3]);
+                    tokens[tokens.length - 4] += ',';
+                    int p_count = 0;
+                    String p_name = "";
+                    for (int i = 1; i < tokens.length - 3; i++) {
+                        if (tokens[i].charAt(tokens[i].length() - 1) == ',') {
+                            p_name += tokens[i].substring(0, tokens[i].length() - 1);
+                            passengerName[p_count] = p_name;
+                            p_name = "";
                             p_count++;
-                        }
-                        else{
-                            p_name+=" "+tokens[i];
+                        } else {
+                            p_name += " " + tokens[i];
                         }
                     }
 
@@ -138,24 +133,28 @@ class QueryRunner implements Runnable {
                     conn.close();
                     String PNR = bookTicket.getString(1);
                     responseQuery = PNR;
+                    //----------------------------------------------------------------
+                    //  Sending data back to the client
+                    printWriter.println(responseQuery);
+                    // System.out.println("\nSent results to client - "
+                    //                     + socketConnection.getRemoteSocketAddress().toString() );
+                    clientCommand = bufferedInput.readLine();
                 } catch (SQLException e) {
-                    printSQLException(e);
-                    if (conn != null) {
+                    if (Objects.equals(e.getSQLState(), "40001")) {
+                        continue;
+                    } else {
+                        if (Objects.equals(e.getSQLState(), "40001")) System.out.println("Shit");
                         try {
                             System.out.println("Transaction is being rolled back.");
                             conn.rollback();
+                            clientCommand = bufferedInput.readLine();
+                            printSQLException(e);
                         } catch (Exception ex) {
                             ex.printStackTrace();
+//                            System.out.println("Shit2");
                         }
                     }
                 }
-
-                //----------------------------------------------------------------
-                //  Sending data back to the client
-                printWriter.println(responseQuery);
-                // System.out.println("\nSent results to client - "
-                //                     + socketConnection.getRemoteSocketAddress().toString() );
-                clientCommand = bufferedInput.readLine();
             }
             inputStream.close();
             bufferedInput.close();
