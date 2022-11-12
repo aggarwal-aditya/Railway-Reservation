@@ -7,6 +7,7 @@ public class client
 {
     public static void main(String args[])throws IOException
     {
+        long start = System.nanoTime();
         /**************************/
         int firstLevelThreads = 3 ;   // Indicate no of users
         /**************************/
@@ -31,5 +32,8 @@ public class client
         {
             executorService.shutdownNow();
         }
+        long finish = System.nanoTime();
+        long timeElapsed = finish - start;
+        System.out.printf("%d",timeElapsed);
     }
 }

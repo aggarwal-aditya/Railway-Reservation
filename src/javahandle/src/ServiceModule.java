@@ -173,7 +173,7 @@ class QueryRunner implements Runnable {
  * Main Class to control the program flow
  */
 public class ServiceModule {
-    static int serverPort = 7005;
+    static int serverPort = 7008;
     static int numServerCores = 2;
 
     //------------ Main----------------------

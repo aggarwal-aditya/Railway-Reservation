@@ -142,7 +142,7 @@ BEGIN
 	else
 	type_coach=0;
 	end if;
-	PNR_string=trainID::text||to_char(day,'yyyymmdd')||type_coach||coach::text||berth::text;
+	PNR_string=trainID::text||'_'||to_char(day,'yyyymmdd')||'_'||type_coach||'_'||coach::text||'_'||berth::text;
 	return PNR_string;
 END;
 $$
