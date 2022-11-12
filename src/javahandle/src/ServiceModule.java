@@ -2,7 +2,6 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.*;
-import java.util.StringTokenizer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -21,17 +20,14 @@ class JDBCPostgreSQLConnection {
         Connection conn = null;
         try {
             Class.forName("org.postgresql.Driver");
-        }
-        catch(ClassNotFoundException ex) {
+        } catch (ClassNotFoundException ex) {
             System.out.println("Error: unable to load driver class!");
             System.exit(1);
         }
         try {
             conn = DriverManager.getConnection(url, user, password);
 
-            if (conn != null) {
-                System.out.println("Connected to the PostgreSQL server successfully.");
-            } else {
+            if (conn == null) {
                 System.out.println("Failed to make connection!");
             }
 
@@ -43,100 +39,131 @@ class JDBCPostgreSQLConnection {
     }
 }
 
-class QueryRunner implements Runnable
-{
+class QueryRunner implements Runnable {
     //  Declare socket for client access
     protected Socket socketConnection;
 
-    public QueryRunner(Socket clientSocket)
-    {
-        this.socketConnection =  clientSocket;
+    public QueryRunner(Socket clientSocket) {
+        this.socketConnection = clientSocket;
     }
 
-    public void run()
-    {
-        JDBCPostgreSQLConnection app = new JDBCPostgreSQLConnection();
-        Connection conn=null;
-        try {
-            conn= app.connect();
-//                System.out.println("Transaction Isolation Level: " + conn.getTransactionIsolation());
-            conn.setAutoCommit(false);
-            conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-            // Get the transaction isolation again
-//                System.out.println("Transaction Isolation Level: "+ conn.getTransactionIsolation());
+    public void printSQLException(SQLException ex) {
+        for (Throwable e : ex) {
+            if (e instanceof SQLException) {
+                e.printStackTrace(System.err);
+                System.err.println("SQLState: " + ((SQLException) e).getSQLState());
+                System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
+                System.err.println("Message: " + e.getMessage());
+                Throwable t = ex.getCause();
+                while (t != null) {
+                    System.out.println("Cause: " + t);
+                    t = t.getCause();
+                }
+            }
         }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
+    }
 
-        try
-        {
+    public void run() {
+
+        try {
             //  Reading data from client
             InputStreamReader inputStream = new InputStreamReader(socketConnection
-                    .getInputStream()) ;
-            BufferedReader bufferedInput = new BufferedReader(inputStream) ;
+                    .getInputStream());
+            BufferedReader bufferedInput = new BufferedReader(inputStream);
             OutputStreamWriter outputStream = new OutputStreamWriter(socketConnection
-                    .getOutputStream()) ;
-            BufferedWriter bufferedOutput = new BufferedWriter(outputStream) ;
-            PrintWriter printWriter = new PrintWriter(bufferedOutput, true) ;
+                    .getOutputStream());
+            BufferedWriter bufferedOutput = new BufferedWriter(outputStream);
+            PrintWriter printWriter = new PrintWriter(bufferedOutput, true);
 
-            String clientCommand = "" ;
-            String responseQuery = "" ;
-            String queryInput = "" ;
+            String clientCommand=bufferedInput.readLine();
+            String responseQuery = "";
+            String queryInput = "";
+            while (!clientCommand.equals("#")) {
+//                System.out.println("Received data <" + clientCommand + "> from client : "
+//                        + socketConnection.getRemoteSocketAddress().toString());
 
-            while(true)
-            {
-                // Read client query
-                clientCommand = bufferedInput.readLine();
-//                 System.out.println("Received data <" + clientCommand + "> from client : "
-//                                     + socketConnection.getRemoteSocketAddress().toString());
+//                StringTokenizer tokenizer = new StringTokenizer(clientCommand);
+//                queryInput = tokenizer.nextToken();
+                String[] tokens = clientCommand.split(" ");
+                int numberofTickets = 0;
+                String[] passengerName = null;
+                String coachType="";
+                String date="";
+                int trainID= 0;
+                try {
+                    numberofTickets = Integer.parseInt(tokens[0]);
+                    passengerName = new String[numberofTickets];
+                    coachType=tokens[tokens.length-1];
+                    date=tokens[tokens.length-2];
+                    trainID= Integer.parseInt(tokens[tokens.length-3]);
+                    tokens[tokens.length-4]+=',';
+                    int p_count=0;
+                    String p_name="";
+                    for(int i=1;i<tokens.length-3;i++){
+                        if(tokens[i].charAt(tokens[i].length()-1)==','){
+                            p_name+=tokens[i].substring(0,tokens[i].length()-1);
+                            passengerName[p_count]=p_name;
+                            p_name="";
+                            p_count++;
+                        }
+                        else{
+                            p_name+=" "+tokens[i];
+                        }
+                    }
 
-                //  Tokenize here
-                StringTokenizer tokenizer = new StringTokenizer(clientCommand);
-                queryInput = tokenizer.nextToken();
-
-                if(queryInput.equals("Finish"))
-                {
-//                    String returnMsg = "Connection Terminated - client : "
-//                            + socketConnection.getRemoteSocketAddress().toString();
-//                    System.out.println(returnMsg);
-                    inputStream.close();
-                    bufferedInput.close();
-                    outputStream.close();
-                    bufferedOutput.close();
-                    printWriter.close();
-                    socketConnection.close();
-                    return;
+                } catch (Exception ex) {
+                    System.out.println("Ill Formatted Input");
+                }
+                JDBCPostgreSQLConnection app = new JDBCPostgreSQLConnection();
+                Connection conn = null;
+                try {
+                    conn = app.connect();
+                    conn.setAutoCommit(false);
+                    conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+//                    System.out.println("Transaction Isolation Level: " + conn.getTransactionIsolation());
+                } catch (SQLException e) {
+                    printSQLException(e);
                 }
                 try {
-                    Statement st = conn.createStatement();
-                    ResultSet rs;
-                    CallableStatement bookTicket = conn.prepareCall("{? = call bookTicket(?,?,?,?,?,?,?) }");
-                    bookTicket.registerOutParameter(1,Types.BIGINT);
-                    rs = st.executeQuery("SELECT * FROM trains");
-                    while (rs.next()) {
-                        System.out.print("Column 1 returned\n");
-                        printWriter.println(rs);
+                    CallableStatement bookTicket = conn.prepareCall("{? = call bookTicket(?,?,?,?,?)}");
+                    bookTicket.registerOutParameter(1, Types.VARCHAR);
+                    bookTicket.setInt(2, trainID);
+                    bookTicket.setDate(3, Date.valueOf(date));
+                    bookTicket.setInt(4, numberofTickets);
+                    bookTicket.setString(5, coachType);
+                    Array array = conn.createArrayOf("VARCHAR", passengerName);
+                    bookTicket.setArray(6, array);
+                    bookTicket.execute();
+                    conn.commit();
+                    conn.close();
+                    String PNR = bookTicket.getString(1);
+                    responseQuery = PNR;
+                } catch (SQLException e) {
+                    printSQLException(e);
+                    if (conn != null) {
+                        try {
+                            System.out.println("Transaction is being rolled back.");
+                            conn.rollback();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
                     }
-                    rs.close();
-                    st.close();
-                    responseQuery = "******* Dummy result ******";
                 }
-                catch (SQLException e) {
-                    System.out.print(e.getMessage());
-                }
-
 
                 //----------------------------------------------------------------
                 //  Sending data back to the client
                 printWriter.println(responseQuery);
                 // System.out.println("\nSent results to client - "
                 //                     + socketConnection.getRemoteSocketAddress().toString() );
-
+                clientCommand = bufferedInput.readLine();
             }
-        }
-        catch(IOException e)
-        {
+            inputStream.close();
+            bufferedInput.close();
+            outputStream.close();
+            bufferedOutput.close();
+            printWriter.close();
+            socketConnection.close();
+        } catch (IOException e) {
             return;
         }
 
@@ -146,13 +173,12 @@ class QueryRunner implements Runnable
 /**
  * Main Class to control the program flow
  */
-public class ServiceModule
-{
+public class ServiceModule {
     static int serverPort = 7005;
-    static int numServerCores = 2 ;
+    static int numServerCores = 2;
+
     //------------ Main----------------------
-    public static void main(String[] args) throws IOException
-    {
+    public static void main(String[] args) throws IOException {
 
 
         // Creating a thread pool
@@ -163,7 +189,7 @@ public class ServiceModule
         Socket socketConnection = null;
 
         // Always-ON server
-        while(true){
+        while (true) {
             System.out.println("Listening port : " + serverPort
                     + "\nWaiting for clients...");
             socketConnection = serverSocket.accept();   // Accept a connection from a client
@@ -176,4 +202,7 @@ public class ServiceModule
             executorService.submit(runnableTask);
         }
     }
+
 }
+
+

@@ -1,6 +1,0 @@
-org.postgresql.jdbc.PgResultSet@4e071058
-******* Dummy result ******
-org.postgresql.jdbc.PgResultSet@2374c77a
-******* Dummy result ******
-org.postgresql.jdbc.PgResultSet@3cbaf179
-******* Dummy result ******
