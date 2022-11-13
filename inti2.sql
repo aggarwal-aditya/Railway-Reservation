@@ -148,7 +148,7 @@ END;
 $$
 language plpgsql;
 
-CREATE OR REPLACE FUNCTION getTicket(pnr bigint)
+CREATE OR REPLACE FUNCTION getTicket(pnr VARCHAR)
 RETURNS TABLE(name varchar(256), trainID integer, journey_date date, coach char(8),berth integer, berth_type char(2))
 AS
 $$

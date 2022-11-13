@@ -26,8 +26,8 @@ class sendQuery implements Runnable
             Socket socketConnection = new Socket("localhost", sockPort) ;
 
             // Files for input queries and responses
-            String inputfile = "C:/Users/Aditya Aggarwal/Desktop/DBMS Project/src/javahandle/Input/" + Thread.currentThread().getName() + "_input.txt" ;
-            String outputfile = "C:/Users/Aditya Aggarwal/Desktop/DBMS Project/src/javahandle/Output/" +Thread.currentThread().getName() + "_output.txt" ;
+            String inputfile = "C:/Users/mitta/Downloads/Railway-Reservation-main/src/javahandle/Input/" + Thread.currentThread().getName() + "_input.txt" ;
+            String outputfile = "C:/Users/mitta/Downloads/Railway-Reservation-main/src/javahandle/Output/" +Thread.currentThread().getName() + "_output.txt" ;
 
             //-----Initialising the Input & ouput file-streams and buffers-------
             OutputStreamWriter outputStream = new OutputStreamWriter(socketConnection

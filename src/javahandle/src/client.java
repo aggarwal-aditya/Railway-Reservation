@@ -9,7 +9,7 @@ public class client
     {
         long start = System.nanoTime();
         /**************************/
-        int firstLevelThreads = 50 ;   // Indicate no of users
+        int firstLevelThreads = 3 ;   // Indicate no of users
         /**************************/
         // Creating a thread pool
         ExecutorService executorService = Executors.newFixedThreadPool(firstLevelThreads);
