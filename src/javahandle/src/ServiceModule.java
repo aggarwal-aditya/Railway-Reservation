@@ -130,9 +130,8 @@ class QueryRunner implements Runnable {
                     bookTicket.setArray(6, array);
                     bookTicket.execute();
                     conn.commit();
-                    conn.close();
                     String PNR = bookTicket.getString(1);
-                    responseQuery = PNR;
+                    responseQuery = "PNR Number: "+PNR+"\t\t\t\t\t\t\t\t\t"+"Date of Journey:"+Date.valueOf(date);
                     //----------------------------------------------------------------
                     //  Sending data back to the client
                     printWriter.println(responseQuery);
@@ -143,17 +142,18 @@ class QueryRunner implements Runnable {
                     if (Objects.equals(e.getSQLState(), "40001")) {
                         continue;
                     } else {
-                        if (Objects.equals(e.getSQLState(), "40001")) System.out.println("Shit");
                         try {
-                            System.out.println("Transaction is being rolled back.");
+//                            System.out.println("Transaction is being rolled back.");
                             conn.rollback();
                             clientCommand = bufferedInput.readLine();
-                            printSQLException(e);
+//                            printSQLException(e);
                         } catch (Exception ex) {
                             ex.printStackTrace();
 //                            System.out.println("Shit2");
                         }
                     }
+                }finally {
+                    conn.close();
                 }
             }
             inputStream.close();
@@ -162,7 +162,7 @@ class QueryRunner implements Runnable {
             bufferedOutput.close();
             printWriter.close();
             socketConnection.close();
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             return;
         }
 
