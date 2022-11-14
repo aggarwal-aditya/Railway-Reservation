@@ -23,7 +23,7 @@ public class client
         executorService.shutdown();
         try
         {    // Wait for 8 sec and then exit the executor service
-            if (!executorService.awaitTermination(900, TimeUnit.MILLISECONDS))
+            if (!executorService.awaitTermination(10, TimeUnit.SECONDS))
             {
                 executorService.shutdownNow();
             }

@@ -79,45 +79,53 @@ class QueryRunner implements Runnable {
             String clientCommand = bufferedInput.readLine();
             String responseQuery = "";
             String queryInput = "";
-            while (!clientCommand.equals("#")) {
-                String[] tokens = clientCommand.split(" ");
-                int numberofTickets = 0;
-                String[] passengerName = null;
-                String coachType = "";
-                String date = "";
-                int trainID = 0;
-                try {
-                    numberofTickets = Integer.parseInt(tokens[0]);
-                    passengerName = new String[numberofTickets];
-                    coachType = tokens[tokens.length - 1];
-                    date = tokens[tokens.length - 2];
-                    trainID = Integer.parseInt(tokens[tokens.length - 3]);
-                    tokens[tokens.length - 4] += ',';
-                    int p_count = 0;
-                    String p_name = "";
-                    for (int i = 1; i < tokens.length - 3; i++) {
-                        if (tokens[i].charAt(tokens[i].length() - 1) == ',') {
-                            p_name += tokens[i].substring(0, tokens[i].length() - 1);
-                            passengerName[p_count] = p_name;
-                            p_name = "";
-                            p_count++;
-                        } else {
-                            p_name += " " + tokens[i];
-                        }
-                    }
 
-                } catch (Exception ex) {
-                    System.out.println("Ill Formatted Input");
-                }
-                JDBCPostgreSQLConnection app = new JDBCPostgreSQLConnection();
-                Connection conn = null;
-                try {
-                    conn = app.connect();
-                    conn.setAutoCommit(false);
-                    conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+            boolean is_retry=false;
+
+            JDBCPostgreSQLConnection app = new JDBCPostgreSQLConnection();
+            Connection conn = null;
+            try {
+                conn = app.connect();
+                conn.setAutoCommit(false);
+                conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 //                    System.out.println("Transaction Isolation Level: " + conn.getTransactionIsolation());
-                } catch (SQLException e) {
-                    printSQLException(e);
+            } catch (SQLException e) {
+                printSQLException(e);
+            }
+
+            int numberofTickets = 0;
+            String[] passengerName = null;
+            String coachType = "";
+            String date = "";
+            int trainID = 0;
+            String[] tokens;
+
+            while (!clientCommand.equals("#")) {
+
+                if(!is_retry) {
+                    try {
+                        tokens = clientCommand.split(" ");
+                        numberofTickets = Integer.parseInt(tokens[0]);
+                        passengerName = new String[numberofTickets];
+                        coachType = tokens[tokens.length - 1];
+                        date = tokens[tokens.length - 2];
+                        trainID = Integer.parseInt(tokens[tokens.length - 3]);
+                        tokens[tokens.length - 4] += ',';
+                        int p_count = 0;
+                        String p_name = "";
+                        for (int i = 1; i < tokens.length - 3; i++) {
+                            if (tokens[i].charAt(tokens[i].length() - 1) == ',') {
+                                p_name += tokens[i].substring(0, tokens[i].length() - 1);
+                                passengerName[p_count] = p_name;
+                                p_name = "";
+                                p_count++;
+                            } else {
+                                p_name += " " + tokens[i];
+                            }
+                        }
+                    } catch (Exception ex) {
+                        System.out.println("Ill Formatted Input");
+                    }
                 }
                 try {
                     CallableStatement bookTicket = conn.prepareCall("{? = call bookTicket(?,?,?,?,?)}");
@@ -132,38 +140,35 @@ class QueryRunner implements Runnable {
                     conn.commit();
                     String PNR = bookTicket.getString(1);
                     responseQuery = "PNR Number: "+PNR+"\t\t\t\t\t\t\t\t\t"+"Date of Journey:"+Date.valueOf(date);
-                    //----------------------------------------------------------------
-                    //  Sending data back to the client
+//            ----------------------------------------------------------------
+//              Sending data back to the client
                     printWriter.println(responseQuery);
-                    // System.out.println("\nSent results to client - "
-                    //                     + socketConnection.getRemoteSocketAddress().toString() );
                     clientCommand = bufferedInput.readLine();
                 } catch (SQLException e) {
                     if (Objects.equals(e.getSQLState(), "40001")) {
+                        conn.rollback();
                         continue;
                     } else {
                         try {
-//                            System.out.println("Transaction is being rolled back.");
+                            System.out.println("Transaction is being rolled back.");
                             conn.rollback();
                             clientCommand = bufferedInput.readLine();
-//                            printSQLException(e);
+                            printSQLException(e);
                         } catch (Exception ex) {
                             ex.printStackTrace();
-//                            System.out.println("Shit2");
                         }
                     }
-                }finally {
-                    conn.close();
                 }
             }
+            conn.close();
             inputStream.close();
             bufferedInput.close();
             outputStream.close();
             bufferedOutput.close();
             printWriter.close();
             socketConnection.close();
-        } catch (IOException | SQLException e) {
-            return;
+        } catch (IOException | RuntimeException | SQLException ex) {
+            ex.printStackTrace();
         }
 
     }
@@ -174,7 +179,7 @@ class QueryRunner implements Runnable {
  */
 public class ServiceModule {
     static int serverPort = 7008;
-    static int numServerCores = 2;
+    static int numServerCores = 50;
 
     //------------ Main----------------------
     public static void main(String[] args) throws IOException {
