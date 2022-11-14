@@ -1,18 +1,215 @@
-PNR Number: 4				Train Number :4652				Date of Journey:2022-11-01
-Passenger Name				Coach				Berth				Berth Type
+PNR Number: 4652_20221101_0_2014_8				Train Number :4652				Date of Journey:2022-11-01
+	Passenger Name							Coach				Berth			Berth Type
 
-PNR Number: 2				Train Number :22517				Date of Journey:2022-11-01
-Passenger Name				Coach				Berth				Berth Type
+XxNTYZOVC                   				SL2014				8				SU
+q                           				SL2014				9				LB
+XZIfHNTjijYe                				SL2014				10				MB
+sUHAYefmXROVz               				SL2014				11				UB
+RHyGGETabqoHRGa             				SL2014				12				LB
+kcumYTklWVZYofn             				SL2014				13				MB
+oWOLmiZv                    				SL2014				14				UB
+FbHJsJCIQsKghO              				SL2014				15				LB
+coYaZXQplzVnEC              				SL2014				16				MB
+gnVlFqthnHAQYs              				SL2014				17				UB
+oOovoT                      				SL2014				18				SL
+cMdXxEo                     				SL2014				19				SU
+WGBeXRacOVedToM             				SL2014				20				LB
+gNCMIUgvfORSIzP             				SL2014				21				MB
+Vq                          				SL2014				22				UB
+AQZIA                       				SL2014				23				LB
+ctkEBhGzGSwjNL              				SL2014				24				MB
+FltsrJfqCrzSS               				SL2015				1				LB
+FtrsEqCMlCLzcJ              				SL2015				2				MB
+ovAZhtOEFD                  				SL2015				3				UB
+OOnWGV                      				SL2015				4				LB
+nuvGoa                      				SL2015				5				MB
+FcbEhtMKv                   				SL2015				6				UB
+Ord                         				SL2015				7				SL
+kst                         				SL2015				8				SU
+gEtNJ                       				SL2015				9				LB
+VYlKfutqmWIrTk              				SL2015				10				MB
+VQcOsyTaVlG                 				SL2015				11				UB
+PDAFgDqz                    				SL2015				12				LB
+zrjYFCyBZahPd               				SL2015				13				MB
+mECExVQjkugxMMh             				SL2015				14				UB
+nINGbkKIu                   				SL2015				15				LB
+QGREfyWpuuaYimTG            				SL2015				16				MB
+nmPOemmnxxFwbA              				SL2015				17				UB
+Ohoe                        				SL2015				18				SL
+ZkzPvHhMATYvYV              				SL2015				19				SU
 
-PNR Number: 2				Train Number :22517				Date of Journey:2022-11-01
-Passenger Name				Coach				Berth				Berth Type
 
-PNR Number: 2				Train Number :22517				Date of Journey:2022-11-01
-Passenger Name				Coach				Berth				Berth Type
 
-PNR Number: 4				Train Number :4652				Date of Journey:2022-11-01
-Passenger Name				Coach				Berth				Berth Type
 
-PNR Number: 4				Train Number :4652				Date of Journey:2022-11-01
-Passenger Name				Coach				Berth				Berth Type
+PNR Number: 22517_20221101_0_2094_24				Train Number :22517				Date of Journey:2022-11-01
+	Passenger Name							Coach				Berth			Berth Type
+
+QIjf                        				SL2094				24				MB
+kfvmF                       				SL2095				1				LB
+B                           				SL2095				2				MB
+ux                          				SL2095				3				UB
+jT                          				SL2095				4				LB
+toVN                        				SL2095				5				MB
+FiTe                        				SL2095				6				UB
+adr                         				SL2095				7				SL
+zewLzChnjjsKk               				SL2095				8				SU
+JDtU                        				SL2095				9				LB
+UOIqaspnnFED                				SL2095				10				MB
+PwYbeiYcKuaJh               				SL2095				11				UB
+txW                         				SL2095				12				LB
+VFidEJh                     				SL2095				13				MB
+mVRAA                       				SL2095				14				UB
+zXwMXzzm                    				SL2095				15				LB
+nfJhGZhfHezwWGCr            				SL2095				16				MB
+QAKcMjb                     				SL2095				17				UB
+mLeigOvbfjGWyXM             				SL2095				18				SL
+YYERfMWQYNkCx               				SL2095				19				SU
+KhckxOiBwRNFmZbI            				SL2095				20				LB
+fcpAFzDsDFOBd               				SL2095				21				MB
+snNk                        				SL2095				22				UB
+pogeaJoWtg                  				SL2095				23				LB
+zTTVV                       				SL2095				24				MB
+BPWLsbJyVjOEwpZ             				SL2096				1				LB
+WISVkPYBY                   				SL2096				2				MB
+egjJDHLfKS                  				SL2096				3				UB
+HQwopnRyVjbLLc              				SL2096				4				LB
+rtzUMAV                     				SL2096				5				MB
+FMbl                        				SL2096				6				UB
+ZpdorkZHUDL                 				SL2096				7				SL
+aMKsidzc                    				SL2096				8				SU
+dQYX                        				SL2096				9				LB
+szwHgw                      				SL2096				10				MB
+
+
+
+
+PNR Number: 22517_20221101_1_2830_16				Train Number :22517				Date of Journey:2022-11-01
+	Passenger Name							Coach				Berth			Berth Type
+
+gCvzsrysgv                  				AC2830				16				LB
+DbiyBh                      				AC2830				17				LB
+iAZTsgzdjlHzoAc             				AC2830				18				UB
+HvUDXOOv                    				AC2831				1				UB
+kkdtUtWT                    				AC2831				2				SL
+tDsEIKTXpjCkk               				AC2831				3				SU
+CTWBedO                     				AC2831				4				LB
+h                           				AC2831				5				LB
+ODJmiP                      				AC2831				6				UB
+LEdDfHyxfq                  				AC2831				7				UB
+HQqZKhlSYS                  				AC2831				8				SL
+uBqWzRNXkckSe               				AC2831				9				SU
+rBdYgp                      				AC2831				10				LB
+Dcxx                        				AC2831				11				LB
+l                           				AC2831				12				UB
+YriId                       				AC2831				13				UB
+CnUqESPKfS                  				AC2831				14				SL
+gWXDdfPuWC                  				AC2831				15				SU
+k                           				AC2831				16				LB
+C                           				AC2831				17				LB
+OsxMRgcu                    				AC2831				18				UB
+CqambzrzJ                   				AC2832				1				UB
+EFFWln                      				AC2832				2				SL
+AgcopDC                     				AC2832				3				SU
+uMiJbEnpzzU                 				AC2832				4				LB
+xGRqQ                       				AC2832				5				LB
+uONYUmHmymVKlI              				AC2832				6				UB
+yfvuTrEvUUCscwf             				AC2832				7				UB
+t                           				AC2832				8				SL
+ESSjiXbDJzrgZCk             				AC2832				9				SU
+kGhZhAqOVIhpoVSp            				AC2832				10				LB
+RIUWrUwlOPqTMw              				AC2832				11				LB
+fbFKbNUTxxV                 				AC2832				12				UB
+
+
+
+
+PNR Number: 22517_20221101_0_2101_6				Train Number :22517				Date of Journey:2022-11-01
+	Passenger Name							Coach				Berth			Berth Type
+
+BcDVewGirhyOCUuS            				SL2101				6				UB
+hz                          				SL2101				7				SL
+deESS                       				SL2101				8				SU
+TQgCmuOCosFQwmcW            				SL2101				9				LB
+LAWgG                       				SL2101				10				MB
+g                           				SL2101				11				UB
+eUjXGTMactmBiQsw            				SL2101				12				LB
+Fzw                         				SL2101				13				MB
+mnyoO                       				SL2101				14				UB
+omtISKgpzcDomKDC            				SL2101				15				LB
+EHVaCCfOhRUjtaA             				SL2101				16				MB
+WsN                         				SL2101				17				UB
+
+
+
+
+PNR Number: 4652_20221101_0_2031_20				Train Number :4652				Date of Journey:2022-11-01
+	Passenger Name							Coach				Berth			Berth Type
+
+OXRsrRRBGEraFk              				SL2031				20				LB
+SZDuIFge                    				SL2031				21				MB
+ORUQVTvkQK                  				SL2031				22				UB
+OPPKuwKEmyzIo               				SL2031				23				LB
+yYOok                       				SL2031				24				MB
+hPhUVher                    				SL2032				1				LB
+ZdAmGaQZOLmWjI              				SL2032				2				MB
+CHhvUX                      				SL2032				3				UB
+cutgWWJAGIrEz               				SL2032				4				LB
+ZRWnrbOsSamr                				SL2032				5				MB
+ba                          				SL2032				6				UB
+hxsC                        				SL2032				7				SL
+FpBIgmmiqZlTFODV            				SL2032				8				SU
+SMFroDYymZdN                				SL2032				9				LB
+OnmxOZXGB                   				SL2032				10				MB
+SPORPQcTdjW                 				SL2032				11				UB
+rSG                         				SL2032				12				LB
+PrRL                        				SL2032				13				MB
+TCZAgaTGRpBy                				SL2032				14				UB
+ccMIxPqRodNjF               				SL2032				15				LB
+Zq                          				SL2032				16				MB
+xWAgKUmPewD                 				SL2032				17				UB
+FBSwXhlEAxijTOq             				SL2032				18				SL
+bmizsluGjXhtzSPV            				SL2032				19				SU
+qlRbhcqq                    				SL2032				20				LB
+wWIt                        				SL2032				21				MB
+RBqLTrFQMxkrQDc             				SL2032				22				UB
+wNdVXShmzF                  				SL2032				23				LB
+eJ                          				SL2032				24				MB
+zaMMCt                      				SL2033				1				LB
+ItSaYuQjzdDit               				SL2033				2				MB
+OMtao                       				SL2033				3				UB
+lQy                         				SL2033				4				LB
+
+
+
+
+PNR Number: 4652_20221101_1_2900_1				Train Number :4652				Date of Journey:2022-11-01
+	Passenger Name							Coach				Berth			Berth Type
+
+u                           				AC2900				1				UB
+APdKh                       				AC2900				2				SL
+Jk                          				AC2900				3				SU
+QVsxJAFuS                   				AC2900				4				LB
+wdEkICzhlIWKi               				AC2900				5				LB
+sUdE                        				AC2900				6				UB
+ZnlduxkYsGg                 				AC2900				7				UB
+y                           				AC2900				8				SL
+ocjdSnqgJnMy                				AC2900				9				SU
+vs                          				AC2900				10				LB
+PbPitHfu                    				AC2900				11				LB
+elu                         				AC2900				12				UB
+DLrcUiF                     				AC2900				13				UB
+yKRBQtBoxZyHyD              				AC2900				14				SL
+OxdaNWRtHJPWqz              				AC2900				15				SU
+r                           				AC2900				16				LB
+apEweLxzzmGbeXQH            				AC2900				17				LB
+CpeRoiQlKgJkenu             				AC2900				18				UB
+LbeHXhCCRwEnekeZ            				AC2901				1				UB
+HxZFGMkOYPP                 				AC2901				2				SL
+bEE                         				AC2901				3				SU
+bfOSYw                      				AC2901				4				LB
+XBUODQOON                   				AC2901				5				LB
+Nmnj                        				AC2901				6				UB
+
+
+
 

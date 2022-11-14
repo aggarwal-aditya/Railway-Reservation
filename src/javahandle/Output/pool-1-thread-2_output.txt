@@ -1,15 +1,85 @@
-PNR Number: 2				Train Number :22517				Date of Journey:2022-11-01
-Passenger Name				Coach				Berth				Berth Type
+PNR Number: 22517_20221101_0_2088_20				Train Number :22517				Date of Journey:2022-11-01
+	Passenger Name							Coach				Berth			Berth Type
 
-PNR Number: 2				Train Number :22517				Date of Journey:2022-11-01
-Passenger Name				Coach				Berth				Berth Type
+hDeVtLvlW                   				SL2088				20				LB
+ZlmAvzfsppsFR               				SL2088				21				MB
+p                           				SL2088				22				UB
 
-PNR Number: 2				Train Number :22517				Date of Journey:2022-11-01
-Passenger Name				Coach				Berth				Berth Type
 
-PNR Number: 2				Train Number :22517				Date of Journey:2022-11-01
-Passenger Name				Coach				Berth				Berth Type
 
-PNR Number: 2				Train Number :22517				Date of Journey:2022-11-01
-Passenger Name				Coach				Berth				Berth Type
+
+PNR Number: 22517_20221101_0_2098_14				Train Number :22517				Date of Journey:2022-11-01
+	Passenger Name							Coach				Berth			Berth Type
+
+SYa                         				SL2098				14				UB
+zcpuxW                      				SL2098				15				LB
+bgseZoMGqmltvV              				SL2098				16				MB
+WohvFfXpNgzvH               				SL2098				17				UB
+
+
+
+
+PNR Number: 22517_20221101_1_2838_9				Train Number :22517				Date of Journey:2022-11-01
+	Passenger Name							Coach				Berth			Berth Type
+
+GXWh                        				AC2838				9				SU
+ypLLKIlqOQGiLN              				AC2838				10				LB
+LmJaQAwahH                  				AC2838				11				LB
+
+
+
+
+PNR Number: 22517_20221101_0_2105_17				Train Number :22517				Date of Journey:2022-11-01
+	Passenger Name							Coach				Berth			Berth Type
+
+cCSwssNSflIUJXx             				SL2105				17				UB
+SLkGJewhdRPe                				SL2105				18				SL
+BjFUz                       				SL2105				19				SU
+
+
+
+
+PNR Number: 22517_20221101_1_2842_14				Train Number :22517				Date of Journey:2022-11-01
+	Passenger Name							Coach				Berth			Berth Type
+
+HawbtzdZAZI                 				AC2842				14				SL
+doGFAr                      				AC2842				15				SU
+HuWV                        				AC2842				16				LB
+badUYYTdMevz                				AC2842				17				LB
+MvrcCWi                     				AC2842				18				UB
+wo                          				AC2843				1				UB
+zXZI                        				AC2843				2				SL
+OPO                         				AC2843				3				SU
+DqsvLwfiGIpAXNA             				AC2843				4				LB
+HtLpQcQzEoeZD               				AC2843				5				LB
+wyxeHpJRZCLlog              				AC2843				6				UB
+zs                          				AC2843				7				UB
+NuEJVLmArdCTLtH             				AC2843				8				SL
+uReqclr                     				AC2843				9				SU
+vud                         				AC2843				10				LB
+PrLLhYaWce                  				AC2843				11				LB
+ET                          				AC2843				12				UB
+bRM                         				AC2843				13				UB
+eNaD                        				AC2843				14				SL
+jWzfmaDJoNTrOmwS            				AC2843				15				SU
+YcLYCDyzEAlv                				AC2843				16				LB
+bbXVRqLltQmgWDI             				AC2843				17				LB
+eDZHNVUf                    				AC2843				18				UB
+AgMGqKUnfInvn               				AC2844				1				UB
+sDPQAGXL                    				AC2844				2				SL
+sgRAYXW                     				AC2844				3				SU
+JwwhmHCpBD                  				AC2844				4				LB
+MduqQU                      				AC2844				5				LB
+dVNXyETgMIwCu               				AC2844				6				UB
+ilbMvYKgJbA                 				AC2844				7				UB
+gSEJhLNHskgYaNHz            				AC2844				8				SL
+zxbJJGANm                   				AC2844				9				SU
+z                           				AC2844				10				LB
+WIQloKz                     				AC2844				11				LB
+vcOXwxQlfhrV                				AC2844				12				UB
+EOVfxkFgypUY                				AC2844				13				UB
+BCAVVnIbSKnrXba             				AC2844				14				SL
+
+
+
 
