@@ -63,6 +63,9 @@ class QueryRunner implements Runnable {
             }
         }
     }
+    public static String fixedLengthString(String string, int length) {
+        return String.format("%1$-"+length+ "s", string);
+    }
 
     public void run() {
 
@@ -92,6 +95,8 @@ class QueryRunner implements Runnable {
             } catch (SQLException e) {
                 printSQLException(e);
             }
+
+            CallableStatement bookTicket = conn.prepareCall("{? = call bookTicket(?,?,?,?,?)}");
 
             int numberofTickets = 0;
             String[] passengerName = null;
@@ -123,23 +128,42 @@ class QueryRunner implements Runnable {
                                 p_name += " " + tokens[i];
                             }
                         }
+
+                        bookTicket.registerOutParameter(1, Types.VARCHAR);
+                        bookTicket.setInt(2, trainID);
+                        bookTicket.setDate(3, Date.valueOf(date));
+                        bookTicket.setInt(4, numberofTickets);
+                        bookTicket.setString(5, coachType);
+                        Array array = conn.createArrayOf("VARCHAR", passengerName);
+                        bookTicket.setArray(6, array);
+
                     } catch (Exception ex) {
                         System.out.println("Ill Formatted Input");
+                        ex.printStackTrace();
                     }
                 }
                 try {
-                    CallableStatement bookTicket = conn.prepareCall("{? = call bookTicket(?,?,?,?,?)}");
-                    bookTicket.registerOutParameter(1, Types.VARCHAR);
-                    bookTicket.setInt(2, trainID);
-                    bookTicket.setDate(3, Date.valueOf(date));
-                    bookTicket.setInt(4, numberofTickets);
-                    bookTicket.setString(5, coachType);
-                    Array array = conn.createArrayOf("VARCHAR", passengerName);
-                    bookTicket.setArray(6, array);
                     bookTicket.execute();
                     conn.commit();
-                    String PNR = bookTicket.getString(1);
-                    responseQuery = "PNR Number: "+PNR+"\t\t\t\t\t\t\t\t\t"+"Date of Journey:"+Date.valueOf(date);
+                    String bookingInfo = bookTicket.getString(1);
+                    String[] tokensBookingInfo =bookingInfo.split("\\|");
+                    String PNR=tokensBookingInfo[0];
+                    responseQuery = "PNR Number: " + PNR + "\t\t\t\t" + "Train Number :" + trainID + "\t\t\t\t"
+                            + "Date of Journey:"
+                            + Date.valueOf(date) + "\n\t" + "Passenger Name" + "\t\t\t\t\t\t\t" + "Coach" + "\t\t\t\t" + "Berth"
+                            + "\t\t\t" + "Berth Type" + "\n\n";
+                    for (int i = 0; i < numberofTickets; i++) {
+                        responseQuery += fixedLengthString(passengerName[i],28);
+                        responseQuery += "\t\t\t\t";
+                        responseQuery += coachType;
+                        responseQuery+=tokensBookingInfo[i*3+1];//Coach number
+                        responseQuery += "\t\t\t\t";
+                        responseQuery+=tokensBookingInfo[i*3+2];
+                        responseQuery += "\t\t\t\t";
+                        responseQuery+=tokensBookingInfo[i*3+3];
+                        responseQuery += "\n";
+                    }
+                    responseQuery+="\n\n\n";
 //            ----------------------------------------------------------------
 //              Sending data back to the client
                     printWriter.println(responseQuery);
