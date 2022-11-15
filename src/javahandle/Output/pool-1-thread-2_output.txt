@@ -1,84 +1,84 @@
-PNR Number: 22517_20221101_0_2088_20				Train Number :22517				Date of Journey:2022-11-01
+PNR Number: 22517_2022-11-01_0_1_1				Train Number :22517				Date of Journey:2022-11-01
 	Passenger Name							Coach				Berth			Berth Type
 
-hDeVtLvlW                   				SL2088				20				LB
-ZlmAvzfsppsFR               				SL2088				21				MB
-p                           				SL2088				22				UB
+hDeVtLvlW                   				SL1				1				LB
+ZlmAvzfsppsFR               				SL1				2				MB
+p                           				SL1				3				UB
 
 
 
 
-PNR Number: 22517_20221101_0_2098_14				Train Number :22517				Date of Journey:2022-11-01
+PNR Number: 22517_2022-11-01_0_1_4				Train Number :22517				Date of Journey:2022-11-01
 	Passenger Name							Coach				Berth			Berth Type
 
-SYa                         				SL2098				14				UB
-zcpuxW                      				SL2098				15				LB
-bgseZoMGqmltvV              				SL2098				16				MB
-WohvFfXpNgzvH               				SL2098				17				UB
+SYa                         				SL1				4				LB
+zcpuxW                      				SL1				5				MB
+bgseZoMGqmltvV              				SL1				6				UB
+WohvFfXpNgzvH               				SL1				7				SL
 
 
 
 
-PNR Number: 22517_20221101_1_2838_9				Train Number :22517				Date of Journey:2022-11-01
+PNR Number: 22517_2022-11-01_1_3_15				Train Number :22517				Date of Journey:2022-11-01
 	Passenger Name							Coach				Berth			Berth Type
 
-GXWh                        				AC2838				9				SU
-ypLLKIlqOQGiLN              				AC2838				10				LB
-LmJaQAwahH                  				AC2838				11				LB
+GXWh                        				AC3				15				UB
+ypLLKIlqOQGiLN              				AC3				16				UB
+LmJaQAwahH                  				AC3				17				SL
 
 
 
 
-PNR Number: 22517_20221101_0_2105_17				Train Number :22517				Date of Journey:2022-11-01
+PNR Number: 22517_2022-11-01_0_2_6				Train Number :22517				Date of Journey:2022-11-01
 	Passenger Name							Coach				Berth			Berth Type
 
-cCSwssNSflIUJXx             				SL2105				17				UB
-SLkGJewhdRPe                				SL2105				18				SL
-BjFUz                       				SL2105				19				SU
+cCSwssNSflIUJXx             				SL2				6				UB
+SLkGJewhdRPe                				SL2				7				SL
+BjFUz                       				SL2				8				SU
 
 
 
 
-PNR Number: 22517_20221101_1_2842_14				Train Number :22517				Date of Journey:2022-11-01
+PNR Number: 22517_2022-11-01_1_3_18				Train Number :22517				Date of Journey:2022-11-01
 	Passenger Name							Coach				Berth			Berth Type
 
-HawbtzdZAZI                 				AC2842				14				SL
-doGFAr                      				AC2842				15				SU
-HuWV                        				AC2842				16				LB
-badUYYTdMevz                				AC2842				17				LB
-MvrcCWi                     				AC2842				18				UB
-wo                          				AC2843				1				UB
-zXZI                        				AC2843				2				SL
-OPO                         				AC2843				3				SU
-DqsvLwfiGIpAXNA             				AC2843				4				LB
-HtLpQcQzEoeZD               				AC2843				5				LB
-wyxeHpJRZCLlog              				AC2843				6				UB
-zs                          				AC2843				7				UB
-NuEJVLmArdCTLtH             				AC2843				8				SL
-uReqclr                     				AC2843				9				SU
-vud                         				AC2843				10				LB
-PrLLhYaWce                  				AC2843				11				LB
-ET                          				AC2843				12				UB
-bRM                         				AC2843				13				UB
-eNaD                        				AC2843				14				SL
-jWzfmaDJoNTrOmwS            				AC2843				15				SU
-YcLYCDyzEAlv                				AC2843				16				LB
-bbXVRqLltQmgWDI             				AC2843				17				LB
-eDZHNVUf                    				AC2843				18				UB
-AgMGqKUnfInvn               				AC2844				1				UB
-sDPQAGXL                    				AC2844				2				SL
-sgRAYXW                     				AC2844				3				SU
-JwwhmHCpBD                  				AC2844				4				LB
-MduqQU                      				AC2844				5				LB
-dVNXyETgMIwCu               				AC2844				6				UB
-ilbMvYKgJbA                 				AC2844				7				UB
-gSEJhLNHskgYaNHz            				AC2844				8				SL
-zxbJJGANm                   				AC2844				9				SU
-z                           				AC2844				10				LB
-WIQloKz                     				AC2844				11				LB
-vcOXwxQlfhrV                				AC2844				12				UB
-EOVfxkFgypUY                				AC2844				13				UB
-BCAVVnIbSKnrXba             				AC2844				14				SL
+HawbtzdZAZI                 				AC3				18				SU
+doGFAr                      				AC4				1				LB
+HuWV                        				AC4				2				LB
+badUYYTdMevz                				AC4				3				UB
+MvrcCWi                     				AC4				4				UB
+wo                          				AC4				5				SL
+zXZI                        				AC4				6				SU
+OPO                         				AC4				7				LB
+DqsvLwfiGIpAXNA             				AC4				8				LB
+HtLpQcQzEoeZD               				AC4				9				UB
+wyxeHpJRZCLlog              				AC4				10				UB
+zs                          				AC4				11				SL
+NuEJVLmArdCTLtH             				AC4				12				SU
+uReqclr                     				AC4				13				LB
+vud                         				AC4				14				LB
+PrLLhYaWce                  				AC4				15				UB
+ET                          				AC4				16				UB
+bRM                         				AC4				17				SL
+eNaD                        				AC4				18				SU
+jWzfmaDJoNTrOmwS            				AC5				1				LB
+YcLYCDyzEAlv                				AC5				2				LB
+bbXVRqLltQmgWDI             				AC5				3				UB
+eDZHNVUf                    				AC5				4				UB
+AgMGqKUnfInvn               				AC5				5				SL
+sDPQAGXL                    				AC5				6				SU
+sgRAYXW                     				AC5				7				LB
+JwwhmHCpBD                  				AC5				8				LB
+MduqQU                      				AC5				9				UB
+dVNXyETgMIwCu               				AC5				10				UB
+ilbMvYKgJbA                 				AC5				11				SL
+gSEJhLNHskgYaNHz            				AC5				12				SU
+zxbJJGANm                   				AC5				13				LB
+z                           				AC5				14				LB
+WIQloKz                     				AC5				15				UB
+vcOXwxQlfhrV                				AC5				16				UB
+EOVfxkFgypUY                				AC5				17				SL
+BCAVVnIbSKnrXba             				AC5				18				SU
 
 
 
