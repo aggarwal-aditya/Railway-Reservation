@@ -197,10 +197,11 @@ class ServiceBookQuery implements Runnable{
 
     @Override
     public void run() {
+        try{
         JDBCPostgreSQLConnection app = new JDBCPostgreSQLConnection();
         Connection conn = null;
         conn = app.connect();
-        String responseQuery="";
+        String responseQuery = "";
         try {
             CallableStatement bookTicket = conn.prepareCall("{? = call bookTicket(?,?,?,?,?)}");
             bookTicket.registerOutParameter(1, Types.VARCHAR);
@@ -212,24 +213,24 @@ class ServiceBookQuery implements Runnable{
             bookTicket.setArray(6, array);
             bookTicket.execute();
             String bookingInfo = bookTicket.getString(1);
-            String[] tokensBookingInfo =bookingInfo.split("\\|");
-            String PNR=tokensBookingInfo[0];
+            String[] tokensBookingInfo = bookingInfo.split("\\|");
+            String PNR = tokensBookingInfo[0];
             responseQuery = "PNR Number: " + PNR + "\t\t\t\t" + "Train Number :" + trainID + "\t\t\t\t"
                     + "Date of Journey:"
                     + Date.valueOf(date) + "\n\t" + "Passenger Name" + "\t\t\t\t\t\t\t" + "Coach" + "\t\t\t\t" + "Berth"
                     + "\t\t\t" + "Berth Type" + "\n\n";
             for (int i = 0; i < numSeat; i++) {
-                responseQuery += fixedLengthString(passengerName[i],28);
+                responseQuery += fixedLengthString(passengerName[i], 28);
                 responseQuery += "\t\t\t\t";
                 responseQuery += coachType;
-                responseQuery+=tokensBookingInfo[i*3+1];//Coach number
+                responseQuery += tokensBookingInfo[i * 3 + 1];//Coach number
                 responseQuery += "\t\t\t\t";
-                responseQuery+=tokensBookingInfo[i*3+2];
+                responseQuery += tokensBookingInfo[i * 3 + 2];
                 responseQuery += "\t\t\t\t";
-                responseQuery+=tokensBookingInfo[i*3+3];
+                responseQuery += tokensBookingInfo[i * 3 + 3];
                 responseQuery += "\n";
             }
-            responseQuery+="\n\n\n";
+            responseQuery += "\n\n\n";
             System.out.println(responseQuery);
             ostream.println(responseQuery);
             ostream.println("#\n");
@@ -238,6 +239,10 @@ class ServiceBookQuery implements Runnable{
             ostream.println("\nCould Not Book Ticket\n");
             ostream.println("#\n");
             printSQLException(e);
+        }
+    } catch (Exception| AssertionError e) {
+            ostream.println("\nCould Not Book Ticket\n");
+            ostream.println("#\n");
         }
 
     }
