@@ -1,0 +1,8 @@
+PNR Number: 4652_2022-11-01_0_996_21				Train Number :4652				Date of Journey:2022-11-01
+	Passenger Name							Coach				Berth			Berth Type
+
+VqVJbjCoRELoxZJH            				SL996				21				MB
+
+
+
+

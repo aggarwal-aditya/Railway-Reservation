@@ -1,0 +1,42 @@
+PNR Number: 4652_2022-11-01_0_997_22				Train Number :4652				Date of Journey:2022-11-01
+	Passenger Name							Coach				Berth			Berth Type
+
+PJHrMvd                     				SL997				22				UB
+FOTgogqHJwQxVjDv            				SL997				23				SL
+JPIOim                      				SL997				24				SU
+
+
+
+
+PNR Number: 22517_2022-11-02_0_992_15				Train Number :22517				Date of Journey:2022-11-02
+	Passenger Name							Coach				Berth			Berth Type
+
+BHjmZmrPP                   				SL992				15				SL
+DPNY                        				SL992				16				SU
+LuvFThcjKNgl                				SL992				17				LB
+MHZDbG                      				SL992				18				MB
+giTDUOhRXLjUX               				SL992				19				UB
+fzNeElh                     				SL992				20				LB
+
+
+
+
+PNR Number: 22517_2022-11-02_0_993_6				Train Number :22517				Date of Journey:2022-11-02
+	Passenger Name							Coach				Berth			Berth Type
+
+tLDlPJCUJ                   				SL993				6				UB
+ECMAwIqDEh                  				SL993				7				SL
+hwTyvhjkuRvLCn              				SL993				8				SU
+ZfnFrXnx                    				SL993				9				LB
+
+
+
+
+PNR Number: 22517_2022-11-02_0_993_13				Train Number :22517				Date of Journey:2022-11-02
+	Passenger Name							Coach				Berth			Berth Type
+
+kFjchEOpgtg                 				SL993				13				MB
+
+
+
+

@@ -64,7 +64,7 @@ class QueryRunner implements Runnable {
         }
     }
     public static String fixedLengthString(String string, int length) {
-        return String.format("%1$-"+length+ "s", string);
+        return String.format("%1$-" + length + "s", string);
     }
 
     public void run() {
@@ -83,7 +83,7 @@ class QueryRunner implements Runnable {
             String responseQuery = "";
             String queryInput = "";
 
-            boolean is_retry=false;
+            boolean is_retry = false;
 
             JDBCPostgreSQLConnection app = new JDBCPostgreSQLConnection();
             Connection conn = null;
@@ -107,7 +107,7 @@ class QueryRunner implements Runnable {
 
             while (!clientCommand.equals("#")) {
 
-                if(!is_retry) {
+                if (!is_retry) {
                     try {
                         tokens = clientCommand.split(" ");
                         numberofTickets = Integer.parseInt(tokens[0]);
@@ -146,24 +146,24 @@ class QueryRunner implements Runnable {
                     bookTicket.execute();
                     conn.commit();
                     String bookingInfo = bookTicket.getString(1);
-                    String[] tokensBookingInfo =bookingInfo.split("\\|");
-                    String PNR=tokensBookingInfo[0];
+                    String[] tokensBookingInfo = bookingInfo.split("\\|");
+                    String PNR = tokensBookingInfo[0];
                     responseQuery = "PNR Number: " + PNR + "\t\t\t\t" + "Train Number :" + trainID + "\t\t\t\t"
-                            + "Date of Journey:"
-                            + Date.valueOf(date) + "\n\t" + "Passenger Name" + "\t\t\t\t\t\t\t" + "Coach" + "\t\t\t\t" + "Berth"
-                            + "\t\t\t" + "Berth Type" + "\n\n";
+                                    + "Date of Journey:"
+                                    + Date.valueOf(date) + "\n\t" + "Passenger Name" + "\t\t\t\t\t\t\t" + "Coach" + "\t\t\t\t" + "Berth"
+                                    + "\t\t\t" + "Berth Type" + "\n\n";
                     for (int i = 0; i < numberofTickets; i++) {
-                        responseQuery += fixedLengthString(passengerName[i],28);
+                        responseQuery += fixedLengthString(passengerName[i], 28);
                         responseQuery += "\t\t\t\t";
                         responseQuery += coachType;
-                        responseQuery+=tokensBookingInfo[i*3+1];//Coach number
+                        responseQuery += tokensBookingInfo[i * 3 + 1]; //Coach number
                         responseQuery += "\t\t\t\t";
-                        responseQuery+=tokensBookingInfo[i*3+2];
+                        responseQuery += tokensBookingInfo[i * 3 + 2];
                         responseQuery += "\t\t\t\t";
-                        responseQuery+=tokensBookingInfo[i*3+3];
+                        responseQuery += tokensBookingInfo[i * 3 + 3];
                         responseQuery += "\n";
                     }
-                    responseQuery+="\n\n\n";
+                    responseQuery += "\n\n\n";
 //            ----------------------------------------------------------------
 //              Sending data back to the client
                     printWriter.println(responseQuery);
@@ -174,10 +174,10 @@ class QueryRunner implements Runnable {
                         continue;
                     } else {
                         try {
-                            System.out.println("Transaction is being rolled back.");
+//                            System.out.println("Transaction is being rolled back.");
                             conn.rollback();
                             clientCommand = bufferedInput.readLine();
-                            printSQLException(e);
+//                            printSQLException(e);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
@@ -203,7 +203,7 @@ class QueryRunner implements Runnable {
  */
 public class ServiceModule {
     static int serverPort = 7008;
-    static int numServerCores = 50;
+    static int numServerCores = 150;
 
     //------------ Main----------------------
     public static void main(String[] args) throws IOException {
@@ -219,11 +219,11 @@ public class ServiceModule {
         // Always-ON server
         while (true) {
             System.out.println("Listening port : " + serverPort
-                    + "\nWaiting for clients...");
+                               + "\nWaiting for clients...");
             socketConnection = serverSocket.accept();   // Accept a connection from a client
             System.out.println("Accepted client :"
-                    + socketConnection.getRemoteSocketAddress().toString()
-                    + "\n");
+                               + socketConnection.getRemoteSocketAddress().toString()
+                               + "\n");
             //  Create a runnable task
             Runnable runnableTask = new QueryRunner(socketConnection);
             //  Submit task for execution

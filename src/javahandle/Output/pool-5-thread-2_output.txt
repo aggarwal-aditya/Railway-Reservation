@@ -1,0 +1,23 @@
+PNR Number: 22517_2022-11-02_0_988_7				Train Number :22517				Date of Journey:2022-11-02
+	Passenger Name							Coach				Berth			Berth Type
+
+GllQTk                      				SL988				7				SL
+qnZDUObqkJgj                				SL988				8				SU
+KsImMHvCgXsTLCiX            				SL988				9				LB
+KttXzT                      				SL988				10				MB
+kwbTyYTfkkIK                				SL988				11				UB
+
+
+
+
+PNR Number: 22517_2022-11-02_0_991_11				Train Number :22517				Date of Journey:2022-11-02
+	Passenger Name							Coach				Berth			Berth Type
+
+AOMmw                       				SL991				11				UB
+GaBy                        				SL991				12				LB
+zkCfSy                      				SL991				13				MB
+tGPikDkNanqAOFB             				SL991				14				UB
+
+
+
+

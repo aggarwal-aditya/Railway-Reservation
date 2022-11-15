@@ -1,3 +1,5 @@
+DROP SCHEMA PUBLIC CASCADE;
+CREATE SCHEMA PUBLIC;
 create table trains( train_id integer primary key, name varchar(256) not null);
 create table available_trains(train_id integer, date date, num_AC integer not null, num_SL integer not null, primary key(train_id, date));
 create table coach(coach_type char(2), berth_num integer, berth_type char(2), primary key(coach_type, berth_num));
@@ -125,7 +127,8 @@ BEGIN
 		-- ticket stores name of passenger coach,berth
 		-- I have bokking table for each train, each booking has PNR array of passenger names, array of coach numbers,array of berths
 		EXECUTE FORMAT ('UPDATE %I c SET total_filled=total_filled+%L','filled_'||lower(ct)||'_seats_'||trainID::text||'_'||to_char(day,'yyyy_mm_dd'),num_seats);
-		pnr=generateUniquePNR(trainID,day,ct,curr_coach,curr_berth);
+		-- pnr=generateUniquePNR(trainID,day,ct,curr_coach,curr_berth);
+		pnr=trainID::text||'_'||to_char(day,'yyyy-mm-dd')||'_'||ct||'_'||curr_coach::text||'_'||curr_berth::text;
 		booking_info=pnr||'|';
 		for empty_seats in 1..num_seats
 	loop
