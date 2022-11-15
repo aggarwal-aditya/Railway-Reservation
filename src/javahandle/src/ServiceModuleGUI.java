@@ -12,12 +12,14 @@ class ServicereleaseQuery implements Runnable{
     String day;
     int numAC;
     int numSL;
-    public ServicereleaseQuery(int arg1,String arg2,int arg3,int arg4)            // constructor to get arguments from the main thread
+    PrintWriter ostream;
+    public ServicereleaseQuery(int arg1,String arg2,int arg3,int arg4,PrintWriter arg5)            // constructor to get arguments from the main thread
      {
         trainID=arg1;
         day=arg2;
         numAC=arg3;
         numSL=arg4;
+        ostream=arg5;
      }
     public void printSQLException(SQLException ex) {
         for (Throwable e : ex) {
@@ -39,25 +41,35 @@ class ServicereleaseQuery implements Runnable{
     }
 
     public void run() {
-
-        JDBCPostgreSQLConnection app = new JDBCPostgreSQLConnection();
-        Connection conn;
-        conn = app.connect();
         try {
-            CallableStatement releaseTrain = conn.prepareCall("{call releaseTrain(?,?,?,?)}");
-            releaseTrain.setInt(1,trainID);
-            releaseTrain.setDate(2,Date.valueOf(day));
-            releaseTrain.setInt(3,numAC);
-            releaseTrain.setInt(4,numSL);
-            releaseTrain.execute();
-            conn.close();
-        } catch (SQLException e) {
+            JDBCPostgreSQLConnection app = new JDBCPostgreSQLConnection();
+            Connection conn;
+            conn = app.connect();
             try {
+                CallableStatement releaseTrain = conn.prepareCall("{call releaseTrain(?,?,?,?)}");
+                releaseTrain.setInt(1, trainID);
+                releaseTrain.setDate(2, Date.valueOf(day));
+                releaseTrain.setInt(3, numAC);
+                releaseTrain.setInt(4, numSL);
+                releaseTrain.execute();
+                ostream.println("Train Released\n");
+                ostream.println("#\n");
                 conn.close();
-            } catch (SQLException ex) {
-               printSQLException(ex);
+            } catch (SQLException e) {
+                try {
+                    ostream.println("Could Not release Train\n");
+                    ostream.println("#\n");
+                    conn.close();
+                } catch (SQLException ex) {
+                    ostream.println("Could Not release Train\n");
+                    ostream.println("#\n");
+                    printSQLException(ex);
+                }
+                printSQLException(e);
             }
-            printSQLException(e);
+        }catch (Exception |AssertionError e){
+            ostream.println("Could Not release Train\n");
+            ostream.println("#\n");
         }
     }
 }
@@ -281,7 +293,7 @@ public class ServiceModuleGUI {
                     String date=inStream.readLine();
                     int numberAC= Integer.parseInt(inStream.readLine());
                     int numberSL= Integer.parseInt(inStream.readLine());
-                    Runnable runnableTask=new ServicereleaseQuery(trainID,date,numberAC,numberSL);
+                    Runnable runnableTask=new ServicereleaseQuery(trainID,date,numberAC,numberSL,printWriter);
                     executorService.submit(runnableTask);
                     break;
                 }

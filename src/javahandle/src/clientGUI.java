@@ -36,7 +36,13 @@ public class clientGUI {
                 System.out.println("\nPlease enter number of Sleeper Coach");
                 str = keyStream.readLine();
                 outStream.writeBytes(str + "\n");
-                System.out.println("Train Released");
+                String readStr="";
+                while(!Objects.equals(readStr = inStream.readLine(), "#")) {
+                    if(!Objects.equals(readStr, "#")) {
+                        System.out.println(readStr);
+                    }
+                }
+
             }
             else if(Objects.equals(str, "2")){
                 System.out.println("\nPlease Enter Your PNR Number:");
