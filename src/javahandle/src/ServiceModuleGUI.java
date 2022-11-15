@@ -130,7 +130,7 @@ class ServicefindQuery implements Runnable{
             String PNR=tokensBookingInfo[0];
             responseQuery = new StringBuilder("PNR Number: " + PNR + "\t\t\t\t" + "Train Number :" + trainID + "\t\t\t\t"
                     + "Date of Journey:"
-                    + Date.valueOf(date) + "\n\t" + "Passenger Name" + "\t\t\t\t\t\t\t" + "Coach" + "\t\t\t\t" + "Berth"
+                    + Date.valueOf(date) + "\n" + fixedLengthString("Passenger Name", 28) + "\t\t\t\t" + "Coach" + "\t\t\t\t" + "Berth"
                     + "\t\t\t" + "Berth Type" + "\n\n");
             for (int i = 0; i < numberofTickets; i++) {
                 responseQuery.append(fixedLengthString(passengerName[i], 28));
