@@ -1,5 +1,9 @@
 # Railway Reservation Portal
 
+The Railway Reservation Portal has been designed to handle a lage number of requests for ticket bookings for the available trains simultaneously using Multithreading.
+
+---
+
 Steps to Follow to run the program for large input using multithreading:
 
 1. Download and extract the entire source code in your PC.
@@ -44,7 +48,3 @@ Steps to Follow to run the program interactively:
    c. Book Seat (Enter 3)
 
 ---
-
-The Railway Reservation Portal has been designed to handle a lage number of requests for ticket bookings for the available trains simultaneously using Multithreading.
-
-
