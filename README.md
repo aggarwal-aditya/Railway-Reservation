@@ -45,4 +45,7 @@ Steps to Follow to run the program interactively:
 
 ---
 
-The Railway Reservation Portal has been designed to handle a lage number of requests for ticket bookings for the available trains simultaneously using Multithreading
+The Railway Reservation Portal has been designed to handle a lage number of requests for ticket bookings for the available trains simultaneously using Multithreading.
+
+
+Following is the ER Diagram of the Database Management in the portal designed:
