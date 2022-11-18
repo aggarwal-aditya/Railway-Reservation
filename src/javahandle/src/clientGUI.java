@@ -8,7 +8,7 @@ import java.util.Objects;
 
 
 public class clientGUI {
-    public static void main(String args[]) throws IOException {
+    public static void main(String[] args) throws IOException {
         int sockPort = 7008;
         Socket socketConnection = new Socket("localhost", sockPort);
         DataOutputStream outStream = new DataOutputStream(socketConnection.getOutputStream());
@@ -36,7 +36,7 @@ public class clientGUI {
                 System.out.println("\nPlease enter number of Sleeper Coach");
                 str = keyStream.readLine();
                 outStream.writeBytes(str + "\n");
-                String readStr="";
+                String readStr;
                 while(!Objects.equals(readStr = inStream.readLine(), "#")) {
                     if(!Objects.equals(readStr, "#")) {
                         System.out.println(readStr);
@@ -49,7 +49,7 @@ public class clientGUI {
                 str = keyStream.readLine();
                 outStream.writeBytes(str + "\n");
                 StringBuilder ticket= new StringBuilder();
-                String readStr="";
+                String readStr;
                 while(!Objects.equals(readStr = inStream.readLine(), "#")) {
                     ticket.append(readStr);
                     ticket.append(System.getProperty("line.separator"));
@@ -76,7 +76,7 @@ public class clientGUI {
                     outStream.writeBytes(str + "\n");
                 }
                 StringBuilder ticket= new StringBuilder();
-                String readStr="";
+                String readStr;
                 while(!Objects.equals(readStr = inStream.readLine(), "#")) {
                     ticket.append(readStr);
                     ticket.append(System.getProperty("line.separator"));

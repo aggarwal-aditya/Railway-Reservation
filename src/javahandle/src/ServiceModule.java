@@ -80,8 +80,7 @@ class QueryRunner implements Runnable {
             PrintWriter printWriter = new PrintWriter(bufferedOutput, true);
 
             String clientCommand = bufferedInput.readLine();
-            String responseQuery = "";
-            String queryInput = "";
+            StringBuilder responseQuery = new StringBuilder();
 
             boolean is_retry = false;
 
@@ -117,15 +116,15 @@ class QueryRunner implements Runnable {
                         trainID = Integer.parseInt(tokens[tokens.length - 3]);
                         tokens[tokens.length - 4] += ',';
                         int p_count = 0;
-                        String p_name = "";
+                        StringBuilder p_name = new StringBuilder();
                         for (int i = 1; i < tokens.length - 3; i++) {
                             if (tokens[i].charAt(tokens[i].length() - 1) == ',') {
-                                p_name += tokens[i].substring(0, tokens[i].length() - 1);
-                                passengerName[p_count] = p_name;
-                                p_name = "";
+                                p_name.append(tokens[i].substring(0, tokens[i].length() - 1));
+                                passengerName[p_count] = p_name.toString();
+                                p_name = new StringBuilder();
                                 p_count++;
                             } else {
-                                p_name += " " + tokens[i];
+                                p_name.append(" ").append(tokens[i]);
                             }
                         }
 
@@ -148,22 +147,22 @@ class QueryRunner implements Runnable {
                     String bookingInfo = bookTicket.getString(1);
                     String[] tokensBookingInfo = bookingInfo.split("\\|");
                     String PNR = tokensBookingInfo[0];
-                    responseQuery = "PNR Number: " + PNR + "\t\t\t\t" + "Train Number :" + trainID + "\t\t\t\t"
-                                    + "Date of Journey:"
-                                    + Date.valueOf(date) + "\n\t" + "Passenger Name" + "\t\t\t\t\t\t\t" + "Coach" + "\t\t\t\t" + "Berth"
-                                    + "\t\t\t" + "Berth Type" + "\n\n";
+                    responseQuery = new StringBuilder("PNR Number: " + PNR + "\t\t\t\t" + "Train Number :" + trainID + "\t\t\t\t"
+                            + "Date of Journey:"
+                            + Date.valueOf(date) + "\n" + fixedLengthString("Passenger Name",28) + "\t\t\t\t" + "Coach" + "\t\t\t\t" + "Berth"
+                            + "\t\t\t" + "Berth Type" + "\n\n");
                     for (int i = 0; i < numberofTickets; i++) {
-                        responseQuery += fixedLengthString(passengerName[i], 28);
-                        responseQuery += "\t\t\t\t";
-                        responseQuery += coachType;
-                        responseQuery += tokensBookingInfo[i * 3 + 1]; //Coach number
-                        responseQuery += "\t\t\t\t";
-                        responseQuery += tokensBookingInfo[i * 3 + 2];
-                        responseQuery += "\t\t\t\t";
-                        responseQuery += tokensBookingInfo[i * 3 + 3];
-                        responseQuery += "\n";
+                        responseQuery.append(fixedLengthString(passengerName[i], 28));
+                        responseQuery.append("\t\t\t\t");
+                        responseQuery.append(coachType);
+                        responseQuery.append(tokensBookingInfo[i * 3 + 1]); //Coach number
+                        responseQuery.append("\t\t\t\t");
+                        responseQuery.append(tokensBookingInfo[i * 3 + 2]);
+                        responseQuery.append("\t\t\t\t");
+                        responseQuery.append(tokensBookingInfo[i * 3 + 3]);
+                        responseQuery.append("\n");
                     }
-                    responseQuery += "\n\n\n";
+                    responseQuery.append("\n\n\n");
 //            ----------------------------------------------------------------
 //              Sending data back to the client
                     printWriter.println(responseQuery);
@@ -175,6 +174,7 @@ class QueryRunner implements Runnable {
                     } else {
                         try {
 //                            System.out.println("Transaction is being rolled back.");
+                            printWriter.println("Could Not book Ticket for request: "+clientCommand+"\n\n\n");
                             conn.rollback();
                             clientCommand = bufferedInput.readLine();
 //                            printSQLException(e);

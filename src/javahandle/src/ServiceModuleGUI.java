@@ -142,7 +142,7 @@ class ServicefindQuery implements Runnable{
             String PNR=tokensBookingInfo[0];
             responseQuery = new StringBuilder("PNR Number: " + PNR + "\t\t\t\t" + "Train Number :" + trainID + "\t\t\t\t"
                     + "Date of Journey:"
-                    + Date.valueOf(date) + "\n\t" + "Passenger Name" + "\t\t\t\t\t\t\t" + "Coach" + "\t\t\t\t" + "Berth"
+                    + Date.valueOf(date) + "\n" + fixedLengthString("Passenger Name",28) + "\t\t\t\t" + "Coach" + "\t\t\t\t" + "Berth"
                     + "\t\t\t" + "Berth Type" + "\n\n");
             for (int i = 0; i < numberofTickets; i++) {
                 responseQuery.append(fixedLengthString(passengerName[i], 28));
@@ -213,7 +213,7 @@ class ServiceBookQuery implements Runnable{
         JDBCPostgreSQLConnection app = new JDBCPostgreSQLConnection();
         Connection conn = null;
         conn = app.connect();
-        String responseQuery = "";
+        StringBuilder responseQuery = new StringBuilder();
         try {
             CallableStatement bookTicket = conn.prepareCall("{? = call bookTicket(?,?,?,?,?)}");
             bookTicket.registerOutParameter(1, Types.VARCHAR);
@@ -227,22 +227,22 @@ class ServiceBookQuery implements Runnable{
             String bookingInfo = bookTicket.getString(1);
             String[] tokensBookingInfo = bookingInfo.split("\\|");
             String PNR = tokensBookingInfo[0];
-            responseQuery = "PNR Number: " + PNR + "\t\t\t\t" + "Train Number :" + trainID + "\t\t\t\t"
+            responseQuery = new StringBuilder("PNR Number: " + PNR + "\t\t\t\t" + "Train Number :" + trainID + "\t\t\t\t"
                     + "Date of Journey:"
-                    + Date.valueOf(date) + "\n\t" + "Passenger Name" + "\t\t\t\t\t\t\t" + "Coach" + "\t\t\t\t" + "Berth"
-                    + "\t\t\t" + "Berth Type" + "\n\n";
+                    + Date.valueOf(date) + "\n" + fixedLengthString("Passenger Name",28) + "\t\t\t\t" + "Coach" + "\t\t\t\t" + "Berth"
+                    + "\t\t\t" + "Berth Type" + "\n\n");
             for (int i = 0; i < numSeat; i++) {
-                responseQuery += fixedLengthString(passengerName[i], 28);
-                responseQuery += "\t\t\t\t";
-                responseQuery += coachType;
-                responseQuery += tokensBookingInfo[i * 3 + 1];//Coach number
-                responseQuery += "\t\t\t\t";
-                responseQuery += tokensBookingInfo[i * 3 + 2];
-                responseQuery += "\t\t\t\t";
-                responseQuery += tokensBookingInfo[i * 3 + 3];
-                responseQuery += "\n";
+                responseQuery.append(fixedLengthString(passengerName[i], 28));
+                responseQuery.append("\t\t\t\t");
+                responseQuery.append(coachType);
+                responseQuery.append(tokensBookingInfo[i * 3 + 1]);//Coach number
+                responseQuery.append("\t\t\t\t");
+                responseQuery.append(tokensBookingInfo[i * 3 + 2]);
+                responseQuery.append("\t\t\t\t");
+                responseQuery.append(tokensBookingInfo[i * 3 + 3]);
+                responseQuery.append("\n");
             }
-            responseQuery += "\n\n\n";
+            responseQuery.append("\n\n\n");
             System.out.println(responseQuery);
             ostream.println(responseQuery);
             ostream.println("#\n");

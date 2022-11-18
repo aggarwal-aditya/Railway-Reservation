@@ -1,7 +1,8 @@
+DROP SCHEMA PUBLIC CASCADE;
+CREATE SCHEMA PUBLIC;
 create table trains( train_id integer primary key, name varchar(256) not null);
-create table available_trains(train_id integer, date date, num_AC integer not null, num_SL integer not null, primary key(train_id, date), foreign key(train_id) references trains(train_id));
+create table available_trains(train_id integer, date date, num_AC integer not null, num_SL integer not null, primary key(train_id, date));
 create table coach(coach_type char(2), berth_num integer, berth_type char(2), primary key(coach_type, berth_num));
--- Probably check for hash collisions (Maybe)
 
 
 --Release Train
@@ -19,7 +20,7 @@ language plpgsql;
 
 -- Get Train Composition
 CREATE OR REPLACE FUNCTION getSeatMatrix(trainID integer, day date, coachType char(2))
-RETURNS table(coach_num integer, berth integer)
+RETURNS INTEGER
 AS 
 $$
 DECLARE
@@ -31,18 +32,13 @@ BEGIN
 		SELECT INTO num
 		num_AC FROM available_trains
 		WHERE train_id = trainID AND date = day;
+		RETURN (num*18);
 	else
 		SELECT INTO num
 		num_SL FROM available_trains
 		WHERE train_id = trainID AND date = day;
+		RETURN (num*24);
 	end if;
-	for i in 1..num loop
-		for j in SELECT c.berth_num FROM coach c WHERE coach_type = coachType loop
-			coach_num :=i;
-			berth := j;
-			return next;
-		end loop;
-	end loop;
 END;
 $$
 language plpgsql;
@@ -54,17 +50,16 @@ RETURNS TRIGGER
 AS
 $$
 DECLARE 
-seat record;
+seat bigint;
 BEGIN
-	EXECUTE format('CREATE TABLE %I (pnr bigint primary key);', 'bookings_' || NEW.train_id::text || '_' || to_char(NEW.date, 'yyyy_mm_dd'));
-	EXECUTE format('CREATE TABLE %I (coach_num integer, berth integer, primary key(coach_num, berth));', 'empty_ac_seats_' || NEW.train_id::text || '_' || to_char(NEW.date, 'yyyy_mm_dd'));
-	EXECUTE format('CREATE TABLE %I (coach_num integer, berth integer, primary key(coach_num, berth));', 'empty_sl_seats_' || NEW.train_id::text || '_' || to_char(NEW.date, 'yyyy_mm_dd'));
-	for seat in execute format('select * from getSeatMatrix(%L, %L, %L);', NEW.train_id, NEW.date, 'AC') loop
-		execute format('INSERT INTO %I VALUES(%L, %L)',  'empty_ac_seats_' || NEW.train_id::text || '_' || to_char(NEW.date, 'yyyy_mm_dd'), seat.coach_num, seat.berth);
-	end loop;
-	for seat in execute format('select * from getSeatMatrix(%L, %L, %L);', NEW.train_id, NEW.date, 'SL') loop
-		execute format('INSERT INTO %I VALUES(%L, %L)',  'empty_sl_seats_' || NEW.train_id::text || '_' || to_char(NEW.date, 'yyyy_mm_dd'), seat.coach_num, seat.berth);
-	end loop;
+	EXECUTE format('CREATE TABLE %I (pnr varchar(64), passenger_names varchar(256) array, booking_details TEXT);', 'bookings_ac_' || NEW.train_id::text || '_' || to_char(NEW.date, 'yyyy_mm_dd'));
+	EXECUTE format('CREATE TABLE %I (pnr varchar(64), passenger_names varchar(256) array, booking_details TEXT);', 'bookings_sl_' || NEW.train_id::text || '_' || to_char(NEW.date, 'yyyy_mm_dd'));
+	EXECUTE format('CREATE TABLE %I (total_available bigint, total_filled bigint);', 'filled_ac_seats_' || NEW.train_id::text || '_' || to_char(NEW.date, 'yyyy_mm_dd'));
+	EXECUTE format('CREATE TABLE %I (total_available bigint, total_filled bigint);', 'filled_sl_seats_' || NEW.train_id::text || '_' || to_char(NEW.date, 'yyyy_mm_dd'));
+	execute format('select * from getSeatMatrix(%L, %L, %L);', NEW.train_id, NEW.date, 'AC') into seat;
+	execute format('INSERT INTO %I VALUES(%L, %L)',  'filled_ac_seats_' || NEW.train_id::text || '_' || to_char(NEW.date, 'yyyy_mm_dd'), seat, 0);
+	execute format('select * from getSeatMatrix(%L, %L, %L);', NEW.train_id, NEW.date, 'SL') into seat;
+	execute format('INSERT INTO %I VALUES(%L, %L)',  'filled_sl_seats_' || NEW.train_id::text || '_' || to_char(NEW.date, 'yyyy_mm_dd'), seat,0);
 return new;
 
 END;
@@ -84,37 +79,71 @@ CREATE OR REPLACE FUNCTION bookTicket(
 	day date,
 	num_seats integer,
 	ct char(2),
-	passenger_name varchar(256)[],
-	passenger_age integer[],
-	passenger_gender char(1)[]
-	
+	passenger_name varchar(256)[]	
 )
 RETURNS text
 AS 
 $$
 declare 
-count_empty integer;
-empty_seats record;
-pnr bigint;
+count_filled bigint;
+count_available bigint;
+curr_coach integer;
+curr_berth integer;
+coach_seats integer;
+empty_seats integer;
+passenger_coach varchar(8)[];
+passenger_berth integer[];
+type_coach integer;
+type_berth varchar(2)[]= ARRAY ['LB','MB','UB','LB','MB','UB','SL','SU','LB','MB','UB','LB','MB','UB','SL','SU','LB','MB','UB','LB','MB','UB','SL','SU','LB','LB','UB','UB', 'SL', 'SU', 'LB', 'LB', 'UB', 'UB', 'SL', 'SU','LB','LB','UB','UB','SL','SU'];
+pnr VARCHAR(64);
+booking_info TEXT;
 i integer=1;
+j integer=1;
 BEGIN 
 	-- check bookings_train_no_date(yyyy_mm_dd)
-	EXECUTE FORMAT('select count(*) from %I','empty_'||lower(ct)||'_seats_'||trainID::text||'_'||to_char(day,'yyyy_mm_dd')) into count_empty;
-	if count_empty < num_seats then
+	EXECUTE FORMAT('select total_filled from %I','filled_'||lower(ct)||'_seats_'||trainID::text||'_'||to_char(day,'yyyy_mm_dd')) into count_filled;
+	EXECUTE FORMAT('select total_available from %I','filled_'||lower(ct)||'_seats_'||trainID::text||'_'||to_char(day,'yyyy_mm_dd')) into count_available;
+	if count_filled+num_seats>count_available then
 	raise exception '% seats not available', num_seats;
 	else
-	for empty_seats in EXECUTE FORMAT('select * from %I LIMIT %L','empty_'||lower(ct)||'_seats_'||trainID::text||'_'||to_char(day,'yyyy_mm_dd'),num_seats)
+		if ct = 'AC' then
+			coach_seats=18;
+			type_coach=1;
+		else
+			coach_seats=24;
+			type_coach=0;
+		end if;
+		curr_coach=count_filled/coach_seats;
+		if (count_filled%coach_seats)<>0 then
+		curr_coach=curr_coach+1;
+		curr_berth=count_filled%coach_seats;
+		curr_berth=curr_berth+1;
+		else
+		curr_coach=curr_coach+1;
+		curr_berth=1;
+		end if;
+		-- raise notice 'Value: % %', curr_coach,curr_berth;
+		-- ticket stores name of passenger coach,berth
+		-- I have bokking table for each train, each booking has PNR array of passenger names, array of coach numbers,array of berths
+		EXECUTE FORMAT ('UPDATE %I c SET total_filled=total_filled+%L','filled_'||lower(ct)||'_seats_'||trainID::text||'_'||to_char(day,'yyyy_mm_dd'),num_seats);
+		-- pnr=generateUniquePNR(trainID,day,ct,curr_coach,curr_berth);
+		pnr=trainID::text||'_'||to_char(day,'yyyy-mm-dd')||'_'||ct||'_'||curr_coach::text||'_'||curr_berth::text;
+		booking_info=pnr||'|';
+		for empty_seats in 1..num_seats
 	loop
-	if pnr IS NULL then
-		pnr=generateUniquePNR(trainID,day,ct,empty_seats.coach_num,empty_seats.berth);
-		EXECUTE FORMAT('CREATE TABLE %I (name varchar(256), age integer, gender char(1), trainID integer, coach char(8), berth integer);', 'ticket_' || pnr::text);
-	END IF;
-		EXECUTE FORMAT('INSERT INTO %I VALUES(%L, %L, %L, %L, %L, %L);', 'ticket_' || pnr::text, passenger_name[i], passenger_age[i], passenger_gender[i], trainID,ct||empty_seats.coach_num::text, empty_seats.berth);
-		EXECUTE FORMAT ('DELETE FROM %I c where c.coach_num=%L AND c.berth=%L','empty_'||lower(ct)||'_seats_'||trainID::text||'_'||to_char(day,'yyyy_mm_dd'),empty_seats.coach_num, empty_seats.berth);
+		passenger_coach[i]=ct||curr_coach::text;
+		passenger_berth[i]=curr_berth;
+		booking_info=booking_info||curr_coach||'|'||curr_berth::text||'|'||type_berth[(type_coach*24)+curr_berth]||'|';
 		i=i+1;
+		curr_berth=curr_berth+1;
+		if curr_berth>coach_seats then
+			curr_coach=curr_coach+1;
+			curr_berth=1;
+			end if;
 	end loop;
+	EXECUTE FORMAT ('INSERT INTO %I VALUES(%L, %L, %L);', 'bookings_'||lower(ct)||'_'||trainID||'_'|| to_char(day, 'yyyy_mm_dd'), PNR,passenger_name,booking_info);
 	end if;
-	RETURN PNR;
+	RETURN booking_info;
 END;
 $$
 language plpgsql;
@@ -122,38 +151,32 @@ language plpgsql;
 
 
 CREATE OR REPLACE FUNCTION generateUniquePNR(trainID integer, day date, coach_type char(2), coach integer, berth integer)
-RETURNS bigint
+RETURNS TEXT
 AS 
 $$
-DECLARE 	
-hashed_value text;
-arr char(1)[32];
-concated_string text;
-mod bigint := 1610612741;
-pnr bigint;
-f char(1);
-ascii_value bigint;
-pow bigint;
+declare PNR_string VARCHAR(64);
+type_coach integer;
 BEGIN
-	concated_string=trainID::text||to_char(day,'yyyy_mm_dd')||coach_type||coach::text||berth::text;
-	select MD5 (concated_string) into hashed_value;
-	SELECT string_to_array(hashed_value::text, NULL) into arr;
-	pow=1;
-	pnr=0;
-	foreach f in ARRAY arr
-	loop
-	select * from ascii(f) into ascii_value;
-	ascii_value=ascii_value*pow;
-	pnr=pnr+ascii_value;
-	pnr=pnr%mod;
-	pow=pow*16;
-	pow=pow%mod;
-	end loop;
-	return pnr;
+	if coach_type='AC' then
+	type_coach=1;
+	else
+	type_coach=0;
+	end if;
+	PNR_string=trainID::text||'_'||to_char(day,'yyyy-mm-dd')||'_'||type_coach||'_'||coach::text||'_'||berth::text;
+	return PNR_string;
 END;
 $$
 language plpgsql;
 
+CREATE OR REPLACE FUNCTION getTicket(PNR VARCHAR(64),trainID integer,day date,coach_type VARCHAR(2))
+RETURNS TABLE(passenger_names varchar(256) array,booking_info TEXT)
+AS
+$$
+BEGIN
+return query EXECUTE FORMAT ('SELECT c.passenger_names, c.booking_details FROM %I c where c.pnr=''%s''','bookings_'||lower(coach_type)||'_'||trainID||'_'||to_char(day, 'yyyy_mm_dd'),PNR) ;
+END;
+$$
+language plpgsql;
 
 
 
