@@ -32,7 +32,7 @@ Steps to Follow to run the program interactively:
 
    ```
    javac -cp ".:postgresql-42.5.0.jar" *.java
-   java -cp ".:postgresql-42.5.0.jar" ServiceModule
+   java -cp ".:postgresql-42.5.0.jar" ServiceModuleGUI
    ```
 5. Open another terminal in the same directory and run the following command:
 
